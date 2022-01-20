@@ -6,12 +6,10 @@ import com.asimkilic.loan.application.generic.message.InfoMessage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static com.asimkilic.loan.application.generic.message.InfoMessage.*;
@@ -30,12 +28,15 @@ public class CustomerSaveRequestDto {
     private String lastName;
 
     @NotNull(message = CUSTOMER_TR_ID_NO_DESCRIPTION)
-    @Size(min = 11,max = 11,message = CUSTOMER_TR_ID_NO_DESCRIPTION)
+    @Size(min = 11, max = 11, message = CUSTOMER_TR_ID_NO_DESCRIPTION)
     @Schema(description = CUSTOMER_TR_ID_NO_DESCRIPTION)
     private String turkishRepublicIdNo;
 
     @Past
     private Date dateOfBirth;
+
+    @Email
+    private String email;
 
     @NotNull
     @Min(value = 0)

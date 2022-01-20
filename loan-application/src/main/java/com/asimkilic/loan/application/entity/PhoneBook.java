@@ -27,7 +27,7 @@ public class PhoneBook implements Serializable, BaseEntity {
     @Column(name="phone",length = 10,unique = true, nullable = false)
     private String phone;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REFRESH)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name="customer_id", foreignKey = @ForeignKey(name="FK_PHONEBOOK_CUSTOMER_ID"),nullable = false)
     private Customer customer;
 

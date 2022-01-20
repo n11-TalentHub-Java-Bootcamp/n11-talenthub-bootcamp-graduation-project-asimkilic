@@ -15,13 +15,15 @@ public class CustomerDto {
 
     private String id;
 
+    private String turkishRepublicIdNo;
+
     private String firstName;
 
     private String lastName;
 
-    private String turkishRepublicIdNo;
-
     private Date dateOfBirth;
+
+    private String email;
 
     private BigDecimal monthlySalary;
 

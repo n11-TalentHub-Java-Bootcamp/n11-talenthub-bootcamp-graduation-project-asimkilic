@@ -26,7 +26,7 @@ public class Customer implements Serializable, BaseEntity {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "user_id", nullable = false, updatable = false)
+    @Column(name = "customer_id", nullable = false, updatable = false)
     private String id;
 
     @Column(name = "turkish_republic_id_no", length = 11, unique = true)
@@ -54,7 +54,7 @@ public class Customer implements Serializable, BaseEntity {
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<PhoneBook> phones = new HashSet<>();
 
 

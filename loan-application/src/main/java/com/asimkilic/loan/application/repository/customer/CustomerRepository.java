@@ -1,4 +1,4 @@
-package com.asimkilic.loan.application.repository;
+package com.asimkilic.loan.application.repository.customer;
 
 import com.asimkilic.loan.application.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;

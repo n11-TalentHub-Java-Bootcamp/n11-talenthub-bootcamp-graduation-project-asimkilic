@@ -1,4 +1,4 @@
-package com.asimkilic.loan.application.service.entityservice;
+package com.asimkilic.loan.application.service.entityservice.customer;
 
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.generic.service.BaseEntityService;
