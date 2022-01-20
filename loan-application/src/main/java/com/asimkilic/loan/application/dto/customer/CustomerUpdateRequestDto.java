@@ -8,21 +8,21 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
+import static com.asimkilic.loan.application.gen.message.InfoMessage.PHONE_NUMBER_FORMAT_MESSAGE;
 
 @Data
-@Schema(description = "It is used to save new customer")
-public class CustomerSaveRequestDto {
+@Schema(description = "It is used to update the Customer")
+public class CustomerUpdateRequestDto {
 
-    @NotNull(message = CUSTOMER_TR_ID_NO_DESCRIPTION)
+    private String id;
+
     @Size(min = 11, max = 11, message = CUSTOMER_TR_ID_NO_DESCRIPTION)
     @Schema(description = CUSTOMER_TR_ID_NO_DESCRIPTION)
     private String turkishRepublicIdNo;
 
-    @NotNull
     @Size(max = 100)
     private String firstName;
 
-    @NotNull
     @Size(max = 100)
     private String lastName;
 
@@ -32,10 +32,8 @@ public class CustomerSaveRequestDto {
     @Email
     private String email;
 
-    @NotNull
     @Min(value = 0)
     private BigDecimal monthlySalary;
-
 
     private BigDecimal amountOfGuarantee;
 
@@ -44,11 +42,8 @@ public class CustomerSaveRequestDto {
             message = PHONE_NUMBER_FORMAT_MESSAGE)
     private String primaryPhone;
 
-
     @Pattern(regexp = "(?:(?:(\\s*\\(?([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\\)?\\s*(?:[.-]\\s*)?)([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\\s*(?:[.-]\\s*)?([0-9]{4})",
             message = PHONE_NUMBER_FORMAT_MESSAGE)
     private String secondaryPhone;
-
-
 
 }

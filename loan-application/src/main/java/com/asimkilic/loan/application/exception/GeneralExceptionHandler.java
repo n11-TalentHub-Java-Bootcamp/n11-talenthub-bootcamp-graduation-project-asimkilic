@@ -1,5 +1,6 @@
 package com.asimkilic.loan.application.exception;
 
+import com.asimkilic.loan.application.exception.customer.CustomerNotFoundException;
 import com.asimkilic.loan.application.exception.customer.EmailIsAlreadySavedException;
 import com.asimkilic.loan.application.exception.customer.PhoneIsAlreadySavedException;
 import com.asimkilic.loan.application.exception.customer.TurkishRepublicIdNoIsAlreadySavedException;
@@ -40,20 +41,26 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errors, BAD_REQUEST);
     }
 
-    /*   CUSTOMER EXCEPTIONS */
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<?> customerNotFoundException(CustomerNotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), exception.httpStatus);
+    }
+
     @ExceptionHandler(TurkishRepublicIdNoIsAlreadySavedException.class)
     public ResponseEntity<?> turkishRepublicIdNoIsAlreadySavedException(TurkishRepublicIdNoIsAlreadySavedException exception) {
         return new ResponseEntity<>(exception.getMessage(), exception.httpStatus);
     }
+
     @ExceptionHandler(EmailIsAlreadySavedException.class)
     public ResponseEntity<?> emailIsAlreadySavedException(EmailIsAlreadySavedException exception) {
         return new ResponseEntity<>(exception.getMessage(), exception.httpStatus);
     }
 
 
-    /*   PHONE BOOK EXCEPTIONS */
     @ExceptionHandler(PhoneIsAlreadySavedException.class)
     public ResponseEntity<?> phoneIsAlreadySavedException(PhoneIsAlreadySavedException exception) {
         return new ResponseEntity<>(exception.getMessage(), exception.httpStatus);
     }
+
+
 }

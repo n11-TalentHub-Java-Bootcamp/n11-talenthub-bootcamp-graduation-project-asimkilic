@@ -1,14 +1,11 @@
 package com.asimkilic.loan.application.dto.customer;
 
-import com.asimkilic.loan.application.dto.phonebook.PhoneBookPartialDto;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Set;
 
 @Data
 @Schema(description = "It is used to view the Customer")
@@ -30,10 +27,13 @@ public class CustomerDto {
 
     private BigDecimal amountOfGuarantee;
 
+    private String primaryPhone;
+
+    private String secondaryPhone;
+
+    private LocalDateTime updateTime;
+
     private LocalDateTime creationTime;
-
-
-    private Set<PhoneBookPartialDto> phones;
 
 
 }

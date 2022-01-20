@@ -1,6 +1,6 @@
-package com.asimkilic.loan.application.generic.service;
+package com.asimkilic.loan.application.gen.service;
 
-import com.asimkilic.loan.application.generic.entity.BaseEntity;
+import com.asimkilic.loan.application.gen.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;

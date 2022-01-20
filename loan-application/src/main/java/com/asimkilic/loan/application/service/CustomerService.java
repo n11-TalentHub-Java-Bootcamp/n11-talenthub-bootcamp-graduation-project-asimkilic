@@ -1,14 +1,11 @@
 package com.asimkilic.loan.application.service;
 
-import com.asimkilic.loan.application.converter.customer.PhoneBookMapper;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerSaveRequestDto;
-import com.asimkilic.loan.application.dto.phonebook.PhoneBookPartialDto;
-import com.asimkilic.loan.application.dto.phonebook.PhoneBookSaveRequestForNewCustomerDto;
+import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
 import com.asimkilic.loan.application.entity.Customer;
-import com.asimkilic.loan.application.entity.PhoneBook;
-import com.asimkilic.loan.application.exception.customer.EmailIsAlreadySavedException;
-import com.asimkilic.loan.application.exception.customer.TurkishRepublicIdNoIsAlreadySavedException;
+import com.asimkilic.loan.application.exception.customer.*;
+import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
 import com.asimkilic.loan.application.service.entityservice.customer.CustomerEntityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,26 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.asimkilic.loan.application.converter.customer.CustomerMapper.INSTANCE;
-import static com.asimkilic.loan.application.converter.customer.CustomerMapper.INSTANCE_PHONEBOOK_MAPPER;
-import static com.asimkilic.loan.application.generic.message.InfoMessage.*;
+import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerService {
     private final CustomerEntityService customerEntityService;
-    private final PhoneBookService phoneBookService;
     private final Clock clock;
 
     public List<CustomerDto> findAllUsers() {
         return customerEntityService
                 .findAll()
                 .stream()
+                .filter(x -> x.getStatus() == EnumCustomerStatus.ACTIVE)
                 .map(INSTANCE::convertToCustomerDto)
                 .collect(Collectors.toList());
 
@@ -47,16 +41,43 @@ public class CustomerService {
     public CustomerDto saveNewCustomer(CustomerSaveRequestDto customerSaveRequestDto) {
         Customer newCustomer = INSTANCE.convertToCustomer(customerSaveRequestDto);
         checkCustomerIsValidForCreation(newCustomer);
+        newCustomer.setStatus(EnumCustomerStatus.ACTIVE);
         newCustomer.setCreationTime(getLocalDateTimeNow());
         newCustomer = customerEntityService.save(newCustomer);
 
-        List<PhoneBook> phoneBooks = phoneBookService.savePhoneList(customerSaveRequestDto.getPhones(), newCustomer);
-        Set<PhoneBookPartialDto> phoneBookPartialDtoSet = phoneBooks.stream().map(INSTANCE_PHONEBOOK_MAPPER::convertToPhoneBookPartialDto).collect(Collectors.toSet());
+        return INSTANCE.convertToCustomerDto(newCustomer);
+    }
 
-        CustomerDto customerDto = INSTANCE.convertToCustomerDto(newCustomer);
-        customerDto.setPhones(phoneBookPartialDtoSet);
+    @Transactional(propagation = Propagation.REQUIRED)
+    public CustomerDto updateCustomer(CustomerUpdateRequestDto customerUpdateRequestDto) {
+        Customer customer = INSTANCE.convertToCustomer(customerUpdateRequestDto);
+        validateUpdateCustomerCredentialsNotInUse(customer);
+        customer.setUpdateTime(getLocalDateTimeNow());
+        customer = customerEntityService.save(customer);
+        return INSTANCE.convertToCustomerDto(customer);
+    }
 
-        return customerDto;
+    public void deleteCustomerByCustomerId(String customerId) {
+        Customer customer = customerEntityService
+                .findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
+
+        setDeletingCustomerStatusFalseAndUpdateTimeAndSave(customer);
+    }
+
+    public void deleteCustomerByTurkishRepublicIdNo(String turkishRepublicIdNo) {
+        Customer customer = customerEntityService.findCustomerByTurkishRepublicIdNo(turkishRepublicIdNo)
+                .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
+
+        setDeletingCustomerStatusFalseAndUpdateTimeAndSave(customer);
+    }
+
+    protected void validateUpdateCustomerCredentialsNotInUse(final Customer customer) {
+        boolean inUse = customerEntityService
+                .validateUpdateCustomerCredentialsNotInUse(customer.getId(), customer.getTurkishRepublicIdNo(), customer.getEmail(), customer.getPrimaryPhone());
+        if (inUse) {
+            throw new IllegalCustomerUpdateArgumentException(CUSTOMER_ARGUMENTS_INVALID);
+        }
     }
 
     protected boolean existsCustomerByTurkishRepublicIdNo(String turkishRepublicIdNo) {
@@ -71,8 +92,14 @@ public class CustomerService {
         return customerEntityService.existsCustomerById(id);
     }
 
-    protected boolean existsPhoneBookByPhone(String phone) {
-        return phoneBookService.existsPhoneBookByPhone(phone);
+    protected boolean existsCustomerByPrimaryPhone(String primaryPhone) {
+        return customerEntityService.existsCustomerByPrimaryPhone(primaryPhone);
+    }
+
+    private void setDeletingCustomerStatusFalseAndUpdateTimeAndSave(Customer customer) {
+        customer.setStatus(EnumCustomerStatus.DELETED);
+        customer.setUpdateTime(getLocalDateTimeNow());
+        customerEntityService.save(customer);
     }
 
     private void checkCustomerIsValidForCreation(Customer customer) {
@@ -85,10 +112,19 @@ public class CustomerService {
         if (resultEmailIsExist) {
             throw new EmailIsAlreadySavedException(EMAIL_IS_ALREADY_SAVED);
         }
+
+        boolean resultPrimaryPhoneIsExist = existsCustomerByPrimaryPhone(customer.getPrimaryPhone());
+        if (resultPrimaryPhoneIsExist) {
+            throw new PhoneIsAlreadySavedException(PHONE_NUMBER_IS_ALREADY_SAVED);
+        }
+
     }
+
 
     private LocalDateTime getLocalDateTimeNow() {
         Instant instant = clock.instant();
         return LocalDateTime.ofInstant(instant, Clock.systemDefaultZone().getZone());
     }
+
+
 }

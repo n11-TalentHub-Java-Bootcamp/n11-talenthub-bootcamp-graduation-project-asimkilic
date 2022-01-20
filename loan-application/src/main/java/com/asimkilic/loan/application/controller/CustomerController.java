@@ -2,6 +2,7 @@ package com.asimkilic.loan.application.controller;
 
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerSaveRequestDto;
+import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
 import com.asimkilic.loan.application.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,4 +33,13 @@ public class CustomerController {
         CustomerDto newCustomer = customerService.saveNewCustomer(customerSaveRequestDto);
         return ResponseEntity.ok(newCustomer);
     }
+
+    @PutMapping
+    @Operation(summary = "Updates customer")
+    public ResponseEntity<CustomerDto> updateCustomer(@RequestBody @Valid CustomerUpdateRequestDto customerUpdateRequestDto) {
+        CustomerDto newCustomer = customerService.updateCustomer(customerUpdateRequestDto);
+        return ResponseEntity.ok(newCustomer);
+    }
+
+
 }

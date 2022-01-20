@@ -1,7 +1,7 @@
 package com.asimkilic.loan.application.entity;
 
-import com.asimkilic.loan.application.generic.entity.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.asimkilic.loan.application.gen.entity.BaseEntity;
+import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +13,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "customer")
@@ -30,20 +29,20 @@ public class Customer implements Serializable, BaseEntity {
     @Column(name = "customer_id", nullable = false, updatable = false)
     private String id;
 
-    @Column(name = "turkish_republic_id_no", length = 11, unique = true)
+    @Column(name = "turkish_republic_id_no", length = 11, unique = true, nullable = false, updatable = false)
     private String turkishRepublicIdNo;
 
-    @Column(name = "first_name", length = 100)
+    @Column(name = "first_name", length = 100, nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", length = 100)
+    @Column(name = "last_name", length = 100, nullable = false)
     private String lastName;
 
-    @Column(name = "date_of_birth")
+    @Column(name = "date_of_birth", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "monthly_salary", precision = 11, scale = 2)
@@ -52,12 +51,21 @@ public class Customer implements Serializable, BaseEntity {
     @Column(name = "amount_of_guarantee", precision = 11, scale = 2)
     private BigDecimal amountOfGuarantee;
 
-    @Column(name = "creation_time")
-    private LocalDateTime creationTime;
+    @Column(name = "primary_phone", length = 10, unique = true, nullable = false)
+    private String primaryPhone;
 
-/*
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<PhoneBook> phones = new HashSet<>();*/
+    @Column(name = "secondary_phone", length = 10)
+    private String secondaryPhone;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private EnumCustomerStatus status;
+
+    @Column(name = "update_time", insertable = false)
+    private LocalDateTime updateTime;
+
+    @Column(name = "creation_time", updatable = false, nullable = false)
+    private LocalDateTime creationTime;
 
 
 }
