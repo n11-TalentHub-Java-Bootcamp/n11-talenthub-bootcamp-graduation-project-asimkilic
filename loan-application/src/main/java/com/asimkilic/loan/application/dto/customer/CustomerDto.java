@@ -1,6 +1,7 @@
 package com.asimkilic.loan.application.dto.customer;
 
 import com.asimkilic.loan.application.dto.phonebook.PhoneBookPartialDto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -30,6 +31,7 @@ public class CustomerDto {
     private BigDecimal amountOfGuarantee;
 
     private LocalDateTime creationTime;
+
 
     private Set<PhoneBookPartialDto> phones;
 

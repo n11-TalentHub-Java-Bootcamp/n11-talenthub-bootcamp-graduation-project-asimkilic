@@ -1,6 +1,7 @@
 package com.asimkilic.loan.application.entity;
 
 import com.asimkilic.loan.application.generic.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class PhoneBook implements Serializable, BaseEntity {
 
     @Column(name="phone",length = 10,unique = true, nullable = false)
     private String phone;
+
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name="customer_id", foreignKey = @ForeignKey(name="FK_PHONEBOOK_CUSTOMER_ID"),nullable = false)

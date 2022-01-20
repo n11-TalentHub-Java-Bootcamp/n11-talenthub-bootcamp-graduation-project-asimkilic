@@ -1,6 +1,7 @@
 package com.asimkilic.loan.application.entity;
 
 import com.asimkilic.loan.application.generic.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,8 +55,9 @@ public class Customer implements Serializable, BaseEntity {
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<PhoneBook> phones = new HashSet<>();
+/*
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<PhoneBook> phones = new HashSet<>();*/
 
 
 }

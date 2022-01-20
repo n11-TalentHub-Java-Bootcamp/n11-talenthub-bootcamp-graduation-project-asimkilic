@@ -20,22 +20,22 @@ public interface CustomerMapper {
 
     Customer convertToCustomer(CustomerSaveRequestDto customerSaveRequestDto);
 
-    @AfterMapping
+   /* @AfterMapping
     default void setPhoneBooksFromSaveDto(@MappingTarget Customer customer, CustomerSaveRequestDto customerSaveRequestDto) {
-       /* customerSaveRequestDto.getPhones().stream().map(INSTANCE_PHONEBOOK_MAPPER::convertToPhoneBook).forEach(
+      *//* customerSaveRequestDto.getPhones().stream().map(INSTANCE_PHONEBOOK_MAPPER::convertToPhoneBook).forEach(
                 phone -> customer.getPhones().add(phone)
-        );*/
-        customer.setPhones(new HashSet<>());
-    }
+        );*//*
+        customer.setPhones(null);
+    }*/
 
     CustomerDto convertToCustomerDto(Customer customer);
 
-    @AfterMapping
+   /* @AfterMapping
     default void setPhonesFromPhoneBook(@MappingTarget CustomerDto customerDto, Customer customer) {
         customerDto.setPhones(
                 customer.getPhones()
                         .stream()
                         .map(INSTANCE_PHONEBOOK_MAPPER::convertToPhoneBookPartialDto)
                         .collect(Collectors.toSet()));
-    }
+    }*/
 }
