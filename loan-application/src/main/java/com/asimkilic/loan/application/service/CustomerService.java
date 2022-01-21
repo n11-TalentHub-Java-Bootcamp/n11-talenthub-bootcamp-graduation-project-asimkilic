@@ -1,6 +1,7 @@
 package com.asimkilic.loan.application.service;
 
 import com.asimkilic.loan.application.converter.customer.CustomerConverter;
+import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerSaveRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
@@ -18,6 +19,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.asimkilic.loan.application.converter.customer.CustomerMapper.INSTANCE;
@@ -48,13 +50,20 @@ public class CustomerService {
         if (!verified) {
             throw new IllegalCustomerUpdateArgumentException(CUSTOMER_CREDENDITALS_ARE_NOT_VALID);
         }
-        // ACTIVE kayıtlar için de var mı? varsa return exception zaten var
+        // ACTIVE kayıtlar için de var mı? varsa return exception zaten var diye.
+        checkCustomerIsValidForCreation(newCustomer); // ACTIVE Kayıtlarda yok
         // DELETED içinde var mı varsa güncelle ve ACTIVE YAP
-        // YENI KAYIT OLARAK EKLE
-        checkCustomerIsValidForCreation(newCustomer);
-
         newCustomer.setStatus(EnumCustomerStatus.ACTIVE);
         newCustomer.setCreationTime(getLocalDateTimeNow());
+
+        Optional<Customer> deletedCustomer = findDeletedCustomerIfExists(newCustomer.getTurkishRepublicIdNo());
+        if (deletedCustomer.isPresent()) {
+            newCustomer = CustomerConverter.convertDeletedCustomerToNewCustomer(newCustomer, deletedCustomer.get());
+            newCustomer.setUpdateTime(getLocalDateTimeNow());
+        }
+        // YENI KAYIT OLARAK EKLE
+
+
         newCustomer = customerEntityService.save(newCustomer);
 
         return INSTANCE.convertToCustomerDto(newCustomer);
@@ -69,16 +78,17 @@ public class CustomerService {
         return INSTANCE.convertToCustomerDto(customer);
     }
 
+  /*  silme işlemi tek TCKN ile olsun
     public void deleteCustomerByCustomerId(String customerId) {
         Customer customer = customerEntityService
                 .findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
 
         setDeletingCustomerStatusFalseAndUpdateTimeAndSave(customer);
-    }
+    }*/
 
-    public void deleteCustomerByTurkishRepublicIdNo(String turkishRepublicIdNo) {
-        Customer customer = customerEntityService.findCustomerByTurkishRepublicIdNo(turkishRepublicIdNo)
+    public void deleteCustomer(CustomerDeleteRequestDto deleteRequestDto) {
+        Customer customer = customerEntityService.findCustomerByTurkishRepublicIdNo(deleteRequestDto.getTurkishRepublicIdNo())
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
 
         setDeletingCustomerStatusFalseAndUpdateTimeAndSave(customer);
@@ -86,7 +96,7 @@ public class CustomerService {
 
     protected void validateUpdateCustomerCredentialsNotInUse(final Customer customer) {
         boolean inUse = customerEntityService
-                .validateUpdateCustomerCredentialsNotInUse(customer.getId(), customer.getTurkishRepublicIdNo(), customer.getEmail(), customer.getPrimaryPhone());
+                .validateUpdateCustomerCredentialsNotInUse(customer.getId(), customer.getEmail(), customer.getPrimaryPhone());
         if (inUse) {
             throw new IllegalCustomerUpdateArgumentException(CUSTOMER_ARGUMENTS_INVALID);
         }
@@ -103,7 +113,6 @@ public class CustomerService {
     protected boolean existsCustomerById(String id) {
         return customerEntityService.existsActiveCustomerById(id);
     }
-
 
     protected boolean existsCustomerByPrimaryPhone(String primaryPhone) {
         return customerEntityService.existsCustomerByPrimaryPhone(primaryPhone);
@@ -133,6 +142,9 @@ public class CustomerService {
 
     }
 
+    private Optional<Customer> findDeletedCustomerIfExists(String turkishRepublicIdNo) {
+        return customerEntityService.findDeletedCustomerIfExist(turkishRepublicIdNo);
+    }
 
     private LocalDateTime getLocalDateTimeNow() {
         Instant instant = clock.instant();

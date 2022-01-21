@@ -16,19 +16,6 @@ public class CustomerUpdateRequestDto {
 
     private String id;
 
-    @Size(min = 11, max = 11, message = CUSTOMER_TR_ID_NO_DESCRIPTION)
-    @Schema(description = CUSTOMER_TR_ID_NO_DESCRIPTION)
-    private String turkishRepublicIdNo;
-
-    @Size(max = 100)
-    private String firstName;
-
-    @Size(max = 100)
-    private String lastName;
-
-    @Past
-    private Date dateOfBirth;
-
     @Email
     private String email;
 

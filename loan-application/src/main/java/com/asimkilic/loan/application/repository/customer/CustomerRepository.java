@@ -27,16 +27,17 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
 
     Optional<Customer> findCustomerByTurkishRepublicIdNoAndDateOfBirthAndStatus(String turkishRepublicIdNo, Date dateOfBirth,EnumCustomerStatus status);
 
+
     @Query(value = "SELECT CAST(CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END AS BOOL) " +
             " FROM customer " +
             " WHERE customer_id <> ?1 AND " +
-            " (turkish_republic_id_no = ?2 OR " +
-            " email = ?3 OR " +
-            " primary_phone = ?4)"
+            " (" +
+            " email = ?2 OR " +
+            " primary_phone = ?3)"
             , nativeQuery = true)
-    boolean validateUpdateCustomerCredentialsNotInUse(String customerId, String turkishRepublicIdNo, String email, String primaryPhone);
+    boolean validateUpdateCustomerCredentialsNotInUse(String customerId, String email, String primaryPhone);
 
-    @Query(value = "SELECT CAST(CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END AS BOOL) " +
+ /*   @Query(value = "SELECT CAST(CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END AS BOOL) " +
             " FROM customer " +
             " WHERE " +
             " (turkish_republic_id_no = ?1 OR " +
@@ -45,7 +46,7 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
             , nativeQuery = true)
     boolean validateNewCustomerCredentialsNotInUse(String turkishRepublicIdNo, String email, String primaryPhone);
 
-
+*/
 
 
 }

@@ -34,6 +34,7 @@ public class CustomerEntityService extends BaseEntityService<Customer, CustomerR
     public boolean existsCustomerByEmail(String email) {
         return getRepository().existsCustomerByEmailAndStatus(email, EnumCustomerStatus.ACTIVE);
     }
+
     public boolean existsActiveCustomerById(String id) {
         return getRepository().existsCustomerByIdAndStatus(id, EnumCustomerStatus.ACTIVE);
     }
@@ -42,10 +43,15 @@ public class CustomerEntityService extends BaseEntityService<Customer, CustomerR
         return getRepository().existsCustomerByPrimaryPhoneAndStatus(primaryPhone, EnumCustomerStatus.ACTIVE);
     }
 
-    public boolean validateUpdateCustomerCredentialsNotInUse(String customerId, String turkishRepublicIdNo, String email, String primaryPhone) {
-        return getRepository().validateUpdateCustomerCredentialsNotInUse(customerId, turkishRepublicIdNo, email, primaryPhone);
+    public boolean validateUpdateCustomerCredentialsNotInUse(String customerId,String email, String primaryPhone) {
+        return getRepository().validateUpdateCustomerCredentialsNotInUse(customerId,email, primaryPhone);
     }
-    public boolean validateNewCustomerCredentialsNotInUse(String turkishRepublicIdNo, String email, String primaryPhone) {
+
+ /*   public boolean validateNewCustomerCredentialsNotInUse(String turkishRepublicIdNo, String email, String primaryPhone) {
         return getRepository().validateNewCustomerCredentialsNotInUse(turkishRepublicIdNo, email, primaryPhone);
+    }*/
+
+    public Optional<Customer> findDeletedCustomerIfExist(String turkishRepublicIdNo) {
+        return getRepository().findCustomerByTurkishRepublicIdNoAndStatus(turkishRepublicIdNo, EnumCustomerStatus.DELETED);
     }
 }

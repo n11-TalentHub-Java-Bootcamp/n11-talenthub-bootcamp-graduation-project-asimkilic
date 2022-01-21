@@ -1,5 +1,6 @@
 package com.asimkilic.loan.application.controller;
 
+import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerSaveRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
@@ -7,6 +8,7 @@ import com.asimkilic.loan.application.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,5 +43,13 @@ public class CustomerController {
         return ResponseEntity.ok(newCustomer);
     }
 
+    @DeleteMapping
+    @Operation(summary = "Deletes customer by Turkish Republic Id No")
+    public ResponseEntity deleteCustomer(@RequestBody @Valid CustomerDeleteRequestDto customerDeleteRequestDto) {
+        customerService.deleteCustomer(customerDeleteRequestDto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // TODO : getbyid tckn metodları yazılacak.
 
 }
