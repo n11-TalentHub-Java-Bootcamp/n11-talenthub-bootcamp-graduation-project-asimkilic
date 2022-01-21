@@ -1,5 +1,6 @@
 package com.asimkilic.loan.application.service;
 
+import com.asimkilic.loan.application.converter.customer.CustomerConverter;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerSaveRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import tr.gov.nvi.tckimlik.WS.KpsPublicSoapService;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -25,6 +27,7 @@ import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
 @RequiredArgsConstructor
 public class CustomerService {
     private final CustomerEntityService customerEntityService;
+    private final KpsPublicSoapService kpsPublicSoapService;
     private final Clock clock;
 
     public List<CustomerDto> findAllUsers() {
@@ -40,7 +43,16 @@ public class CustomerService {
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerDto saveNewCustomer(CustomerSaveRequestDto customerSaveRequestDto) {
         Customer newCustomer = INSTANCE.convertToCustomer(customerSaveRequestDto);
+
+        boolean verified = kpsPublicSoapService.verifyTurkishRepublicIdNo(CustomerConverter.convertToKpsPublicVerifyRequestDto(newCustomer));
+        if (!verified) {
+            throw new IllegalCustomerUpdateArgumentException(CUSTOMER_CREDENDITALS_ARE_NOT_VALID);
+        }
+        // ACTIVE kayıtlar için de var mı? varsa return exception zaten var
+        // DELETED içinde var mı varsa güncelle ve ACTIVE YAP
+        // YENI KAYIT OLARAK EKLE
         checkCustomerIsValidForCreation(newCustomer);
+
         newCustomer.setStatus(EnumCustomerStatus.ACTIVE);
         newCustomer.setCreationTime(getLocalDateTimeNow());
         newCustomer = customerEntityService.save(newCustomer);
@@ -89,8 +101,9 @@ public class CustomerService {
     }
 
     protected boolean existsCustomerById(String id) {
-        return customerEntityService.existsCustomerById(id);
+        return customerEntityService.existsActiveCustomerById(id);
     }
+
 
     protected boolean existsCustomerByPrimaryPhone(String primaryPhone) {
         return customerEntityService.existsCustomerByPrimaryPhone(primaryPhone);
