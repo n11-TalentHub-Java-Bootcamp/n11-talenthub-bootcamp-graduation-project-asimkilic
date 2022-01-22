@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import tr.gov.nvi.tckimlik.WS.KpsPublicSoapService;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -124,7 +123,7 @@ public class CustomerService {
         customerEntityService.save(customer);
     }
 
-    private void checkCustomerIsValidForCreation(Customer customer) {
+    private void checkCustomerIsValidForCreation(final Customer customer) {
         validateCustomerTurkishRepublicIdNo(customer);
 
         boolean resultTurkishIdNoIsExist = existsCustomerByTurkishRepublicIdNo(customer.getTurkishRepublicIdNo());

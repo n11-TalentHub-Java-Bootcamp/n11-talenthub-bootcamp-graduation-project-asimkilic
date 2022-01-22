@@ -2,10 +2,7 @@ package com.asimkilic.loan.application.entity;
 
 import com.asimkilic.loan.application.gen.entity.BaseEntity;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -21,6 +18,7 @@ import java.util.Date;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Customer implements Serializable, BaseEntity {
 
     @Id

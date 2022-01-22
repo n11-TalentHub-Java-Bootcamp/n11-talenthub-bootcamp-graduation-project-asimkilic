@@ -1,5 +1,6 @@
 package com.asimkilic.loan.application;
 
+import com.asimkilic.loan.application.gen.service.BaseTurkishRepublicIdNoVerificationService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +18,9 @@ public class LoanApplication {
 	public Clock clock() {
 		return Clock.systemUTC();
 	}
+
 	@Bean
-	public KpsPublicSoapService kpsPublicSoapService(){
+	public BaseTurkishRepublicIdNoVerificationService baseTurkishRepublicIdNoVerificationService(){
 		return new KpsPublicSoapService();
 	}
 }

@@ -44,7 +44,7 @@ public class CustomerSaveRequestDto {
     @PositiveOrZero
     private BigDecimal amountOfGuarantee;
 
-    @NotNull(message = PHONE_NUMBER_CANNOT_NULL)
+    @NotNull(message = PHONE_NUMBER_CANNOT_BE_NULL)
     @Pattern(regexp = "[1-9]+[0-9]*",
             message = PHONE_NUMBER_FORMAT_MESSAGE)
     @Schema(example = "5321231234")

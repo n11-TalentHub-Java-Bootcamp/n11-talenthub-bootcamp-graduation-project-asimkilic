@@ -1,9 +1,6 @@
 package com.asimkilic.loan.application.exception;
 
-import com.asimkilic.loan.application.exception.customer.CustomerNotFoundException;
-import com.asimkilic.loan.application.exception.customer.EmailIsAlreadySavedException;
-import com.asimkilic.loan.application.exception.customer.PhoneIsAlreadySavedException;
-import com.asimkilic.loan.application.exception.customer.TurkishRepublicIdNoIsAlreadySavedException;
+import com.asimkilic.loan.application.exception.customer.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +59,10 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> phoneIsAlreadySavedException(PhoneIsAlreadySavedException exception) {
         return new ResponseEntity<>(exception.getMessage(), exception.httpStatus);
     }
-
+    @ExceptionHandler(IllegalCustomerUpdateArgumentException.class)
+    public ResponseEntity<?> illegalCustomerUpdateArgumentException(IllegalCustomerUpdateArgumentException exception) {
+        return new ResponseEntity<>(exception.getMessage(), exception.httpStatus);
+    }
     @ExceptionHandler(KpsServiceUnavailableException.class)
     public ResponseEntity<?> kpsServiceUnavailableException(KpsServiceUnavailableException exception) {
         return new ResponseEntity<>(exception.getMessage(), exception.httpStatus);

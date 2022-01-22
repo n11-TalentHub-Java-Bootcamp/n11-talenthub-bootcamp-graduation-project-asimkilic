@@ -3,7 +3,6 @@ package tr.gov.nvi.tckimlik.WS;
 import com.asimkilic.loan.application.gen.service.BaseTurkishRepublicIdNoVerificationService;
 import com.squareup.okhttp.*;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tr.gov.nvi.tckimlik.WS.exception.KpsServiceUnavailableException;
 

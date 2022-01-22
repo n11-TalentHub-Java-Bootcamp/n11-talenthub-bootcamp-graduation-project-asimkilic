@@ -12,9 +12,10 @@ public class InfoMessage {
     public static final String EMAIL_IS_ALREADY_SAVED = "Email address is already saved.";
 
 
-    public static final String PHONE_NUMBER_CANNOT_NULL = "Phone number can not be null.";
+    public static final String PHONE_NUMBER_CANNOT_BE_NULL = "Phone number can not be null.";
     public static final String PHONE_NUMBER_FORMAT_MESSAGE = "Please enter your phone number with 10 digits without leading zero.";
     public static final String PHONE_NUMBER_IS_ALREADY_SAVED = "Phone number is already saved.";
 
 
+    public static final String CREDIT_LIMIT_CANNOT_BE_NULL =" Credit limit can not be null. It must be greater or equal to zero.";
 }
