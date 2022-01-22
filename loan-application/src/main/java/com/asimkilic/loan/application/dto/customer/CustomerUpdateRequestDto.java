@@ -19,18 +19,24 @@ public class CustomerUpdateRequestDto {
     @Email
     private String email;
 
-    @Min(value = 0)
+
+    @Positive
     private BigDecimal monthlySalary;
 
+    @PositiveOrZero
     private BigDecimal amountOfGuarantee;
 
-    @NotNull(message = PHONE_NUMBER_CANNOT_NULL)
-    @Pattern(regexp = "(?:(?:(\\s*\\(?([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\\)?\\s*(?:[.-]\\s*)?)([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\\s*(?:[.-]\\s*)?([0-9]{4})",
+
+
+    @Pattern(regexp = "[1-9]+[0-9]*",
             message = PHONE_NUMBER_FORMAT_MESSAGE)
+    @Schema(example = "5321231234")
     private String primaryPhone;
 
-    @Pattern(regexp = "(?:(?:(\\s*\\(?([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\\)?\\s*(?:[.-]\\s*)?)([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\\s*(?:[.-]\\s*)?([0-9]{4})",
+
+    @Pattern(regexp = "[1-9]+[0-9]*",
             message = PHONE_NUMBER_FORMAT_MESSAGE)
+    @Schema(example = "5321231235")
     private String secondaryPhone;
 
 }

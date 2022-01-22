@@ -50,6 +50,18 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/id/{id}")
+    @Operation(summary = "Returns a customer by customer id")
+    public ResponseEntity<CustomerDto> getCustomerById(@PathVariable String id) {
+        CustomerDto customerDto = customerService.findCustomerById(id);
+        return ResponseEntity.ok(customerDto);
+    }
+    @GetMapping("/trid/{trid}")
+    @Operation(summary = "Returns a customer by customer Turkish Republic Id No")
+    public ResponseEntity<CustomerDto> getCustomerByTurkishRepublicIdNo(@PathVariable String trid){
+        CustomerDto customerDto = customerService.findCustomerByTurkishRepublicIdNo(trid);
+        return ResponseEntity.ok(customerDto);
+    }
     // TODO : getbyid tckn metodları yazılacak.
 
 }

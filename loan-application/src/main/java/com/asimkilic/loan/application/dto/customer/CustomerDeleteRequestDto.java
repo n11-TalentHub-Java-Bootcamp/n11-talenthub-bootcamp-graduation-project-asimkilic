@@ -16,7 +16,7 @@ public class CustomerDeleteRequestDto {
     @NotBlank(message = CUSTOMER_TR_ID_NO_DESCRIPTION)
     @NotNull(message = CUSTOMER_TR_ID_NO_DESCRIPTION)
     @Size(min = 11, max = 11, message = CUSTOMER_TR_ID_NO_DESCRIPTION)
-    @Schema(description = CUSTOMER_TR_ID_NO_DESCRIPTION)
+    @Schema(description = CUSTOMER_TR_ID_NO_DESCRIPTION,example = "12345678912")
     private String turkishRepublicIdNo;
 
 }

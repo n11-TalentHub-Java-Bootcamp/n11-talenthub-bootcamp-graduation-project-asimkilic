@@ -78,7 +78,7 @@ public class CustomerService {
         return INSTANCE.convertToCustomerDto(customer);
     }
 
-  /*  silme işlemi tek TCKN ile olsun
+  /* TODO: customerID silme işlemi olabilir.
     public void deleteCustomerByCustomerId(String customerId) {
         Customer customer = customerEntityService
                 .findById(customerId)
@@ -87,13 +87,29 @@ public class CustomerService {
         setDeletingCustomerStatusFalseAndUpdateTimeAndSave(customer);
     }*/
 
+    public CustomerDto findCustomerById(String customerId) {
+        Customer customer = customerEntityService
+                .findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
+
+        return INSTANCE.convertToCustomerDto(customer);
+    }
+
+    public CustomerDto findCustomerByTurkishRepublicIdNo(String turkishRepublicIdNo) {
+        Customer customer = customerEntityService
+                .findCustomerByTurkishRepublicIdNo(turkishRepublicIdNo)
+                .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
+
+        return INSTANCE.convertToCustomerDto(customer);
+    }
+
     public void deleteCustomer(CustomerDeleteRequestDto deleteRequestDto) {
         Customer customer = customerEntityService.findCustomerByTurkishRepublicIdNo(deleteRequestDto.getTurkishRepublicIdNo())
                 .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
 
         setDeletingCustomerStatusFalseAndUpdateTimeAndSave(customer);
     }
-
+    //TODO: sadece birisini güncellerse hata?
     protected void validateUpdateCustomerCredentialsNotInUse(final Customer customer) {
         boolean inUse = customerEntityService
                 .validateUpdateCustomerCredentialsNotInUse(customer.getId(), customer.getEmail(), customer.getPrimaryPhone());
