@@ -8,6 +8,7 @@ import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.exception.customer.*;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
+import com.asimkilic.loan.application.gen.service.TrIdNoVerificationService;
 import com.asimkilic.loan.application.service.entityservice.customer.CustomerEntityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
 @RequiredArgsConstructor
 public class CustomerService {
     private final CustomerEntityService customerEntityService;
-    private final KpsPublicSoapService kpsPublicSoapService;
+    private final TrIdNoVerificationService trIdNoVerificationService;
     private final Clock clock;
 
     public List<CustomerDto> findAllUsers() {
@@ -45,14 +46,7 @@ public class CustomerService {
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerDto saveNewCustomer(CustomerSaveRequestDto customerSaveRequestDto) {
         Customer newCustomer = INSTANCE.convertToCustomer(customerSaveRequestDto);
-
-        boolean verified = kpsPublicSoapService.verifyTurkishRepublicIdNo(CustomerConverter.convertToKpsPublicVerifyRequestDto(newCustomer));
-        if (!verified) {
-            throw new IllegalCustomerUpdateArgumentException(CUSTOMER_CREDENDITALS_ARE_NOT_VALID);
-        }
-        // ACTIVE kayıtlar için de var mı? varsa return exception zaten var diye.
-        checkCustomerIsValidForCreation(newCustomer); // ACTIVE Kayıtlarda yok
-        // DELETED içinde var mı varsa güncelle ve ACTIVE YAP
+        checkCustomerIsValidForCreation(newCustomer);
         newCustomer.setStatus(EnumCustomerStatus.ACTIVE);
         newCustomer.setCreationTime(getLocalDateTimeNow());
 
@@ -61,9 +55,6 @@ public class CustomerService {
             newCustomer = CustomerConverter.convertDeletedCustomerToNewCustomer(newCustomer, deletedCustomer.get());
             newCustomer.setUpdateTime(getLocalDateTimeNow());
         }
-        // YENI KAYIT OLARAK EKLE
-
-
         newCustomer = customerEntityService.save(newCustomer);
 
         return INSTANCE.convertToCustomerDto(newCustomer);
@@ -78,14 +69,6 @@ public class CustomerService {
         return INSTANCE.convertToCustomerDto(customer);
     }
 
-  /* TODO: customerID silme işlemi olabilir.
-    public void deleteCustomerByCustomerId(String customerId) {
-        Customer customer = customerEntityService
-                .findById(customerId)
-                .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
-
-        setDeletingCustomerStatusFalseAndUpdateTimeAndSave(customer);
-    }*/
 
     public CustomerDto findCustomerById(String customerId) {
         Customer customer = customerEntityService
@@ -109,6 +92,7 @@ public class CustomerService {
 
         setDeletingCustomerStatusFalseAndUpdateTimeAndSave(customer);
     }
+
     //TODO: sadece birisini güncellerse hata?
     protected void validateUpdateCustomerCredentialsNotInUse(final Customer customer) {
         boolean inUse = customerEntityService
@@ -141,6 +125,8 @@ public class CustomerService {
     }
 
     private void checkCustomerIsValidForCreation(Customer customer) {
+        validateCustomerTurkishRepublicIdNo(customer);
+
         boolean resultTurkishIdNoIsExist = existsCustomerByTurkishRepublicIdNo(customer.getTurkishRepublicIdNo());
         if (resultTurkishIdNoIsExist) {
             throw new TurkishRepublicIdNoIsAlreadySavedException(TURKISH_REPUBLIC_ID_NO_IS_ALREADY_TAKEN);
@@ -160,6 +146,15 @@ public class CustomerService {
 
     private Optional<Customer> findDeletedCustomerIfExists(String turkishRepublicIdNo) {
         return customerEntityService.findDeletedCustomerIfExist(turkishRepublicIdNo);
+    }
+
+    private void validateCustomerTurkishRepublicIdNo(final Customer customer) {
+        boolean verified = trIdNoVerificationService
+                .verifyTurkishRepublicIdNo(CustomerConverter.convertToVerifyCustomerTurkishRepublicIdNoRequestDto(customer));
+
+        if (!verified) {
+            throw new IllegalCustomerUpdateArgumentException(CUSTOMER_CREDENDITALS_ARE_NOT_VALID);
+        }
     }
 
     private LocalDateTime getLocalDateTimeNow() {

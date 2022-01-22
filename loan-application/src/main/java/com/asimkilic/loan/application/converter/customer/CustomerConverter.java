@@ -1,6 +1,6 @@
 package com.asimkilic.loan.application.converter.customer;
 
-import com.asimkilic.loan.application.dto.customer.KpsPublicVerifyCustomerRequestDto;
+import com.asimkilic.loan.application.dto.customer.VerifyCustomerTurkishRepublicIdNoRequestDto;
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
 
@@ -9,9 +9,9 @@ import java.util.Locale;
 
 public class CustomerConverter {
 
-    public static KpsPublicVerifyCustomerRequestDto convertToKpsPublicVerifyRequestDto(Customer customer) {
+    public static VerifyCustomerTurkishRepublicIdNoRequestDto convertToVerifyCustomerTurkishRepublicIdNoRequestDto(Customer customer) {
 
-        KpsPublicVerifyCustomerRequestDto dto = KpsPublicVerifyCustomerRequestDto.builder()
+        VerifyCustomerTurkishRepublicIdNoRequestDto dto = VerifyCustomerTurkishRepublicIdNoRequestDto.builder()
                 .firstName(customer.getFirstName().toUpperCase(Locale.ROOT))
                 .lastName(customer.getLastName().toUpperCase(Locale.ROOT))
                 .yearOfBirth(String.valueOf(customer.getDateOfBirth().getYear()+1900))

@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 @Schema(description = "It is used to verify customer from government system")
-public class KpsPublicVerifyCustomerRequestDto {
+public class VerifyCustomerTurkishRepublicIdNoRequestDto {
 
     private String turkishRepublicIdentityNo;
 

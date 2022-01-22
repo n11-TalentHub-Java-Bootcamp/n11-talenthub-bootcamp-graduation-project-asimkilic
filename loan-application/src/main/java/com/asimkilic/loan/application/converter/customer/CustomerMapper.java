@@ -3,7 +3,6 @@ package com.asimkilic.loan.application.converter.customer;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerSaveRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
-import com.asimkilic.loan.application.dto.customer.KpsPublicVerifyCustomerRequestDto;
 import com.asimkilic.loan.application.entity.Customer;
 
 import org.mapstruct.Mapper;
