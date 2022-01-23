@@ -8,11 +8,11 @@ import tr.gov.nvi.tckimlik.WS.exception.KpsServiceUnavailableException;
 
 import java.io.IOException;
 
-@Service
-@NoArgsConstructor
-public class KpsPublicSoapService implements BaseTurkishRepublicIdNoVerificationService {
 
-    @Override
+@NoArgsConstructor
+public class KpsPublicSoapService {
+
+
     public boolean verifyTurkishRepublicIdNo(String turkishRepublicIdNo, String firstName, String lastName, String yearOfBirth) {
         OkHttpClient client = new OkHttpClient();
         MediaType mediaType = MediaType.parse("application/soap+xml; charset=utf-8");

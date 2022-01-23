@@ -4,22 +4,24 @@ import com.asimkilic.loan.application.dto.customer.VerifyCustomerTurkishRepublic
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import tr.gov.nvi.tckimlik.WS.KpsPublicSoapService;
 
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class TrIdNoVerificationService {
-    private final BaseTurkishRepublicIdNoVerificationService verificationService;
+public class TrIdNoVerificationService implements BaseTurkishRepublicIdNoVerificationService{
+   private final KpsPublicSoapService kpsPublicSoapService;
 
-    @Value("${customer-turkish-republic-id-no}")
-    private String demoId;
+    @Value("${customer-turkish-republic-id-no-verify}")
+    private boolean isVerifyActive;
 
+    @Override
     public boolean verifyTurkishRepublicIdNo(VerifyCustomerTurkishRepublicIdNoRequestDto customer) {
-        if (isDemoIdNo(customer.getTurkishRepublicIdentityNo())) {
+        if (!isVerifyActive) {
             return true;
         }
-        boolean isVerified = verificationService.verifyTurkishRepublicIdNo(
+        boolean isVerified = kpsPublicSoapService.verifyTurkishRepublicIdNo(
                 customer.getTurkishRepublicIdentityNo(),
                 customer.getFirstName(),
                 customer.getLastName(),
@@ -27,7 +29,8 @@ public class TrIdNoVerificationService {
         return isVerified;
     }
 
-    private boolean isDemoIdNo(String idNo) {
-        return Objects.equals(idNo, demoId);
-    }
+
+
+
+
 }

@@ -8,7 +8,7 @@ import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.exception.customer.*;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
-import com.asimkilic.loan.application.gen.service.TrIdNoVerificationService;
+import com.asimkilic.loan.application.gen.service.BaseTurkishRepublicIdNoVerificationService;
 import com.asimkilic.loan.application.service.entityservice.customer.CustomerEntityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,8 @@ import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
 @RequiredArgsConstructor
 public class CustomerService {
     private final CustomerEntityService customerEntityService;
-    private final TrIdNoVerificationService trIdNoVerificationService;
+    private final BaseTurkishRepublicIdNoVerificationService trIdNoVerificationService;
+
     private final Clock clock;
 
     public List<CustomerDto> findAllUsers() {
@@ -152,7 +153,7 @@ public class CustomerService {
                 .verifyTurkishRepublicIdNo(CustomerConverter.convertToVerifyCustomerTurkishRepublicIdNoRequestDto(customer));
 
         if (!verified) {
-            throw new IllegalCustomerUpdateArgumentException(CUSTOMER_CREDENDITALS_ARE_NOT_VALID);
+            throw new IllegalCustomerUpdateArgumentException(CUSTOMER_CREDENTIALS_ARE_NOT_VALID);
         }
     }
 

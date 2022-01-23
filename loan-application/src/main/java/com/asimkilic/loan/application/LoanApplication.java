@@ -11,16 +11,18 @@ import java.time.Clock;
 @SpringBootApplication
 public class LoanApplication {
 
-	public static void main(String[] args) {SpringApplication.run(LoanApplication.class, args);}
+    public static void main(String[] args) {
+        SpringApplication.run(LoanApplication.class, args);
+    }
 
 
-	@Bean
-	public Clock clock() {
-		return Clock.systemUTC();
-	}
+    @Bean
+    public Clock clock() {
+        return Clock.systemUTC();
+    }
 
-	@Bean
-	public BaseTurkishRepublicIdNoVerificationService baseTurkishRepublicIdNoVerificationService(){
-		return new KpsPublicSoapService();
-	}
+    @Bean
+    public KpsPublicSoapService baseTurkishRepublicIdNoVerificationService() {
+        return new KpsPublicSoapService();
+    }
 }

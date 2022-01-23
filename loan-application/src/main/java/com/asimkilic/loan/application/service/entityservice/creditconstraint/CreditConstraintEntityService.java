@@ -12,4 +12,13 @@ public class CreditConstraintEntityService extends BaseEntityService<CreditConst
         super(repository);
     }
 
+    @Override
+    public CreditConstraint save(CreditConstraint entity) {
+        if(entity.getId()!=null){
+            // TODO: credit constraint güncellemesini kapat.
+            //throw new CreditConstraintsCannotUpdatableException("easd");
+            return null;
+        }
+        return super.save(entity);
+    }
 }

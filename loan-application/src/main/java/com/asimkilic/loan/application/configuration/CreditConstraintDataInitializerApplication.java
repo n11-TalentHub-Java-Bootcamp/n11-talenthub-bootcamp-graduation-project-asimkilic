@@ -58,7 +58,7 @@ public class CreditConstraintDataInitializerApplication implements CommandLineRu
                     .creditLimit(BigDecimal.ZERO)
                     .creditLimitMultiplierCoefficient(BigDecimal.ONE)
                     .creditScoreLowerLimit(BigDecimal.valueOf(1000))
-                    .creditScoreUpperLimit(BigDecimal.valueOf(9999))
+                    .creditScoreUpperLimit(BigDecimal.valueOf(1900))
                     .percentageOfGuarantee(BigDecimal.valueOf(50))
                     .build();
             creditConstraintList.add(creditConstraint4);
