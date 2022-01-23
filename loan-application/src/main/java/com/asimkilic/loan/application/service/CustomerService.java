@@ -7,6 +7,7 @@ import com.asimkilic.loan.application.dto.customer.CustomerSaveRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.exception.customer.*;
+import com.asimkilic.loan.application.gen.entity.BaseCreditResponse;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
 import com.asimkilic.loan.application.gen.service.BaseTurkishRepublicIdNoVerificationService;
 import com.asimkilic.loan.application.service.entityservice.customer.CustomerEntityService;
@@ -30,6 +31,7 @@ import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
 public class CustomerService {
     private final CustomerEntityService customerEntityService;
     private final BaseTurkishRepublicIdNoVerificationService trIdNoVerificationService;
+    private final CreditService creditService;
 
     private final Clock clock;
 
@@ -56,8 +58,12 @@ public class CustomerService {
             newCustomer.setUpdateTime(getLocalDateTimeNow());
         }
         newCustomer = customerEntityService.save(newCustomer);
+        CustomerDto customerDto = INSTANCE.convertToCustomerDto(newCustomer);
 
-        return INSTANCE.convertToCustomerDto(newCustomer);
+        BaseCreditResponse baseCreditResponse = creditService.applyCredit(customerDto);
+
+
+        return customerDto;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

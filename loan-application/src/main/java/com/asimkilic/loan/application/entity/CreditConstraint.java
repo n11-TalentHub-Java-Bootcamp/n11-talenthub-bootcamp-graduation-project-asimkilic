@@ -13,13 +13,12 @@ import java.math.BigDecimal;
 @Data
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class CreditConstraint implements Serializable, BaseEntity {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "customer_id", nullable = false, updatable = false)
+    @Column(name = "credit_constraint_id", nullable = false, updatable = false)
     private String id;
 
     @Column(name="credit_limit",nullable = false)
@@ -43,5 +42,14 @@ public class CreditConstraint implements Serializable, BaseEntity {
     @Column(name="salary_upper_limit")
     private BigDecimal salaryUpperLimit;
 
-
+    public CreditConstraint(String id, BigDecimal creditLimit, BigDecimal percentageOfGuarantee, BigDecimal creditLimitMultiplierCoefficient, BigDecimal creditScoreLowerLimit, BigDecimal creditScoreUpperLimit, BigDecimal salaryLowerLimit, BigDecimal salaryUpperLimit) {
+        this.id = id;
+        this.creditLimit = creditLimit;
+        this.percentageOfGuarantee = percentageOfGuarantee;
+        this.creditLimitMultiplierCoefficient = creditLimitMultiplierCoefficient;
+        this.creditScoreLowerLimit = creditScoreLowerLimit;
+        this.creditScoreUpperLimit = creditScoreUpperLimit;
+        this.salaryLowerLimit = salaryLowerLimit;
+        this.salaryUpperLimit = salaryUpperLimit;
+    }
 }

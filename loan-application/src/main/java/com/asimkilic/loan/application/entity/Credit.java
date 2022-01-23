@@ -30,14 +30,13 @@ public class Credit implements Serializable, BaseEntity {
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "credit_constraint_id", foreignKey = @ForeignKey(name = "FK_CREDIT_CREDITCONSTRAINT_ID"), nullable = false, updatable = false)
+    @JoinColumn(name = "credit_constraint_id", foreignKey = @ForeignKey(name = "FK_CREDIT_CREDITCONSTRAINT_ID"), updatable = false)
     private CreditConstraint creditConstraint;
 
     @Column(name = "credit_limit",precision = 11, scale = 2, updatable = false)
     private BigDecimal creditLimit;
 
     @Column(name = "creation_time", updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime creationTime;
 
     @Column(name = "salary_at_the_time_of_aplication", precision = 11, scale = 2, updatable = false, nullable = false)

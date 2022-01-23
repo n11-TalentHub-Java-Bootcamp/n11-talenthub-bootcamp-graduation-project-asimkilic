@@ -1,6 +1,7 @@
 package com.asimkilic.loan.application;
 
 import com.asimkilic.loan.application.gen.service.BaseTurkishRepublicIdNoVerificationService;
+import com.creditscoreinquiry.CreditScoreInquiryService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -24,5 +25,10 @@ public class LoanApplication {
     @Bean
     public KpsPublicSoapService baseTurkishRepublicIdNoVerificationService() {
         return new KpsPublicSoapService();
+    }
+
+    @Bean
+    public CreditScoreInquiryService creditScoreInquiryService() {
+        return new CreditScoreInquiryService();
     }
 }

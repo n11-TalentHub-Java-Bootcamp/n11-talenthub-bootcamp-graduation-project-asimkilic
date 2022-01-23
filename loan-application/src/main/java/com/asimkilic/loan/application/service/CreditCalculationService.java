@@ -17,7 +17,7 @@ class CreditCalculationService extends BaseCreditCalculationService {
             throw new RuntimeException(CREDIT_CALCULATOR_PARAMETERS_ARE_NULL);
         }
         super.clientSalary = requestDto.getClientSalary();
-        super.clientAmountofGuarantee = requestDto.getClientAmountofGuarantee();
+        super.clientAmountofGuarantee = requestDto.getClientAmountOfGuarantee();
         super.creditLimit = requestDto.getCreditLimit();
         super.creditLimitMultiplierCoefficient = requestDto.getCreditLimitMultiplierCoefficient();
         super.percentageOfGuarantee = requestDto.getPercentageOfGuarantee();

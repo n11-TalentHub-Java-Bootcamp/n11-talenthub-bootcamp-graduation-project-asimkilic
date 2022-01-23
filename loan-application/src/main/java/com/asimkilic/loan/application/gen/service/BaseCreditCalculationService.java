@@ -1,5 +1,7 @@
 package com.asimkilic.loan.application.gen.service;
 
+import com.asimkilic.loan.application.dto.credit.CreditCalculationRequestDto;
+
 import java.math.BigDecimal;
 
 public abstract class BaseCreditCalculationService {
@@ -10,7 +12,7 @@ public abstract class BaseCreditCalculationService {
     protected  BigDecimal percentageOfGuarantee;
     protected  BigDecimal creditLimitMultiplierCoefficient;
 
-
+    public abstract BigDecimal calculate(CreditCalculationRequestDto creditCalculationRequestDto);
 
     protected final BigDecimal calculateCredit() {
         BigDecimal salaryCoefficient = clientSalary.multiply(creditLimitMultiplierCoefficient);

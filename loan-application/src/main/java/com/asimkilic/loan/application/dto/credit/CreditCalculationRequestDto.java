@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Builder
 public class CreditCalculationRequestDto {
     private  BigDecimal clientSalary;
-    private  BigDecimal clientAmountofGuarantee;
+    private  BigDecimal clientAmountOfGuarantee;
     private  BigDecimal creditLimit;
     private  BigDecimal percentageOfGuarantee;
     private  BigDecimal creditLimitMultiplierCoefficient;

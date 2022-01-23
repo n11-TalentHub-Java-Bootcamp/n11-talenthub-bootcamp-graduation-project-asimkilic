@@ -60,11 +60,9 @@ public class Customer implements Serializable, BaseEntity {
     private EnumCustomerStatus status;
 
     @Column(name = "update_time", insertable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateTime;
 
     @Column(name = "creation_time", updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime creationTime;
 
 
