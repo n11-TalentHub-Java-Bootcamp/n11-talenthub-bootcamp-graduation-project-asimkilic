@@ -1,7 +1,7 @@
 package com.asimkilic.loan.application.service;
 
 import com.asimkilic.loan.application.dto.credit.CreditCalculationRequestDto;
-import com.asimkilic.loan.application.gen.service.BaseCreditCalculationService;
+import com.asimkilic.loan.application.gen.service.credit.BaseCreditCalculationService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,7 +17,7 @@ class CreditCalculationService extends BaseCreditCalculationService {
             throw new RuntimeException(CREDIT_CALCULATOR_PARAMETERS_ARE_NULL);
         }
         super.clientSalary = requestDto.getClientSalary();
-        super.clientAmountofGuarantee = requestDto.getClientAmountOfGuarantee();
+        super.clientAmountOfGuarantee = requestDto.getClientAmountOfGuarantee();
         super.creditLimit = requestDto.getCreditLimit();
         super.creditLimitMultiplierCoefficient = requestDto.getCreditLimitMultiplierCoefficient();
         super.percentageOfGuarantee = requestDto.getPercentageOfGuarantee();

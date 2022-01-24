@@ -1,16 +1,15 @@
-package com.asimkilic.loan.application.gen.service;
+package com.asimkilic.loan.application.gen.service.turkishrepublicidno;
 
 import com.asimkilic.loan.application.dto.customer.VerifyCustomerTurkishRepublicIdNoRequestDto;
+import com.asimkilic.loan.application.gen.service.turkishrepublicidno.BaseTurkishRepublicIdNoVerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tr.gov.nvi.tckimlik.WS.KpsPublicSoapService;
 
-import java.util.Objects;
-
 @Service
 @RequiredArgsConstructor
-public class TrIdNoVerificationService implements BaseTurkishRepublicIdNoVerificationService{
+public class TrIdNoVerificationService implements BaseTurkishRepublicIdNoVerificationService {
    private final KpsPublicSoapService kpsPublicSoapService;
 
     @Value("${customer-turkish-republic-id-no-verify}")

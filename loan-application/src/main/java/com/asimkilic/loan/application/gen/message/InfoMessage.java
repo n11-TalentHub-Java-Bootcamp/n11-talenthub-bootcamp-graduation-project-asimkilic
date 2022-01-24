@@ -21,5 +21,6 @@ public class InfoMessage {
 
     public static final String CREDIT_CALCULATOR_PARAMETERS_ARE_NULL="Credit limit calculator parameters can not be null.";
 
-
+    public static final String CREDIT_APPLICATION_IS_APPROVED = "Your credit application is approved ";
+    public static final String CREDIT_APPLICATION_IS_DENIED = "Your credit application is denied ";
 }

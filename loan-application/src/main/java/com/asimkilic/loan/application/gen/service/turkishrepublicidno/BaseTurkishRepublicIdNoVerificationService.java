@@ -1,4 +1,4 @@
-package com.asimkilic.loan.application.gen.service;
+package com.asimkilic.loan.application.gen.service.turkishrepublicidno;
 
 import com.asimkilic.loan.application.dto.customer.VerifyCustomerTurkishRepublicIdNoRequestDto;
 

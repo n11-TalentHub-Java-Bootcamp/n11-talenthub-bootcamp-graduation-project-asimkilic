@@ -1,6 +1,7 @@
-package com.asimkilic.loan.application.gen.service;
+package com.asimkilic.loan.application.gen.service.credit;
 
 import com.asimkilic.loan.application.dto.credit.CreditScoreInquiryRequestDto;
+import com.asimkilic.loan.application.gen.service.credit.BaseCreditScoreInquiryService;
 import com.creditscoreinquiry.CreditScoreInquiryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +26,7 @@ public class CreditScoreService implements BaseCreditScoreInquiryService {
         if (isGenerateRandomActive) {
             return creditScoreInquiryService.calculateCreditScore(requestDto.getTurkishRepublicIdNo());
         }
-        return BigDecimal.valueOf(800);
+        return BigDecimal.valueOf(400);
     }
 
     private boolean doYouHaveFriendAtCourt(String turkishRepublicIdNo) {

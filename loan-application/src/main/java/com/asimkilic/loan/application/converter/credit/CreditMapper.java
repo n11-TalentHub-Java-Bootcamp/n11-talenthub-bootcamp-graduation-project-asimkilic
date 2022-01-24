@@ -3,6 +3,7 @@ package com.asimkilic.loan.application.converter.credit;
 import com.asimkilic.loan.application.dto.credit.CreditScoreInquiryRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.entity.Credit;
+import com.asimkilic.loan.application.entity.CreditConstraint;
 import com.asimkilic.loan.application.gen.enums.EnumCreditStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -28,4 +29,15 @@ public interface CreditMapper {
     @Mapping(target = "creditLimit", ignore = true)
     @Mapping(target = "customer.id", source = "customerDto.id")
     Credit convertToCreditForDenied(CustomerDto customerDto, EnumCreditStatus denied, BigDecimal creditScore);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "customer.id", source = "customerDto.id")
+    @Mapping(target = "creditConstraint", source = "creditConstraint")
+    @Mapping(target = "creditLimit", source = "calculateTotalCreditBalance")
+    @Mapping(target = "creationTime", ignore = true)
+    @Mapping(target = "amountOfGuaranteeAtTheTimeOfApplication", source = "customerDto.amountOfGuarantee")
+    @Mapping(target = "salaryAtTheTimeOfApplication", source = "customerDto.monthlySalary")
+    @Mapping(target = "creditScoreAtTheTimeOfApplication", source = "creditScore")
+    @Mapping(target = "creditStatus", source = "approved")
+    Credit convertToCreditForApproved(CustomerDto customerDto, CreditConstraint creditConstraint, BigDecimal calculateTotalCreditBalance,EnumCreditStatus approved,BigDecimal creditScore);
 }

@@ -1,15 +1,13 @@
 package com.asimkilic.loan.application.service.entityservice.credit;
 
-import com.asimkilic.loan.application.dto.credit.CreditCalculationRequestDto;
 import com.asimkilic.loan.application.entity.Credit;
 import com.asimkilic.loan.application.entity.CreditConstraint;
 import com.asimkilic.loan.application.gen.enums.EnumCreditStatus;
-import com.asimkilic.loan.application.gen.service.BaseEntityService;
+import com.asimkilic.loan.application.gen.service.entity.BaseEntityService;
 import com.asimkilic.loan.application.repository.credit.CreditRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 public class CreditEntityService extends BaseEntityService<Credit, CreditRepository> {

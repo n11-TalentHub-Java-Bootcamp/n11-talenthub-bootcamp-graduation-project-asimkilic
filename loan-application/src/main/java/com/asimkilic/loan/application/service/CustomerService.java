@@ -9,7 +9,7 @@ import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.exception.customer.*;
 import com.asimkilic.loan.application.gen.entity.BaseCreditResponse;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
-import com.asimkilic.loan.application.gen.service.BaseTurkishRepublicIdNoVerificationService;
+import com.asimkilic.loan.application.gen.service.turkishrepublicidno.BaseTurkishRepublicIdNoVerificationService;
 import com.asimkilic.loan.application.service.entityservice.customer.CustomerEntityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class CustomerService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public CustomerDto saveNewCustomer(CustomerSaveRequestDto customerSaveRequestDto) {
+    public BaseCreditResponse saveNewCustomer(CustomerSaveRequestDto customerSaveRequestDto) {
         Customer newCustomer = INSTANCE.convertToCustomer(customerSaveRequestDto);
         checkCustomerIsValidForCreation(newCustomer);
         newCustomer.setStatus(EnumCustomerStatus.ACTIVE);
@@ -62,8 +62,7 @@ public class CustomerService {
 
         BaseCreditResponse baseCreditResponse = creditService.applyCredit(customerDto);
 
-
-        return customerDto;
+        return baseCreditResponse;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

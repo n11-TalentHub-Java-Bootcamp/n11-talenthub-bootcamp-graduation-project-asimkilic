@@ -1,4 +1,4 @@
-package com.asimkilic.loan.application.gen.service;
+package com.asimkilic.loan.application.gen.service.entity;
 
 import com.asimkilic.loan.application.gen.entity.BaseEntity;
 import lombok.AllArgsConstructor;

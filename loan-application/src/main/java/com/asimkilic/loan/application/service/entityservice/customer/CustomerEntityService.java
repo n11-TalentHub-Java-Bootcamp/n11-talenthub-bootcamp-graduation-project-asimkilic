@@ -2,7 +2,7 @@ package com.asimkilic.loan.application.service.entityservice.customer;
 
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
-import com.asimkilic.loan.application.gen.service.BaseEntityService;
+import com.asimkilic.loan.application.gen.service.entity.BaseEntityService;
 import com.asimkilic.loan.application.repository.customer.CustomerRepository;
 import org.springframework.stereotype.Service;
 

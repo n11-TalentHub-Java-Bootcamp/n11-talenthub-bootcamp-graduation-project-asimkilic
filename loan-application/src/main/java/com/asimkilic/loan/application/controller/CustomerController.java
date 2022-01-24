@@ -4,6 +4,7 @@ import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerSaveRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
+import com.asimkilic.loan.application.gen.entity.BaseCreditResponse;
 import com.asimkilic.loan.application.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,8 +32,8 @@ public class CustomerController {
 
     @PostMapping
     @Operation(summary = "Saves new customer")
-    public ResponseEntity<CustomerDto> saveNewCustomer(@RequestBody @Valid CustomerSaveRequestDto customerSaveRequestDto) {
-        CustomerDto newCustomer = customerService.saveNewCustomer(customerSaveRequestDto);
+    public ResponseEntity<BaseCreditResponse> saveNewCustomer(@RequestBody @Valid CustomerSaveRequestDto customerSaveRequestDto) {
+        BaseCreditResponse newCustomer = customerService.saveNewCustomer(customerSaveRequestDto);
         return ResponseEntity.ok(newCustomer);
     }
 
