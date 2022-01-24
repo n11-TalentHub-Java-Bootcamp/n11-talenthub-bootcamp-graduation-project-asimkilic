@@ -1,13 +1,11 @@
 package com.asimkilic.loan.application.service;
 
 import com.asimkilic.loan.application.converter.credit.CreditConstraintMapper;
-import com.asimkilic.loan.application.dto.credit.ApprovedCreditResponse;
-import com.asimkilic.loan.application.dto.credit.CreditCalculationRequestDto;
-import com.asimkilic.loan.application.dto.credit.CreditScoreInquiryRequestDto;
-import com.asimkilic.loan.application.dto.credit.DeniedCreditResponse;
+import com.asimkilic.loan.application.dto.credit.*;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.entity.Credit;
 import com.asimkilic.loan.application.entity.CreditConstraint;
+import com.asimkilic.loan.application.exception.credit.CreditNotFoundException;
 import com.asimkilic.loan.application.gen.entity.BaseCreditResponse;
 import com.asimkilic.loan.application.gen.enums.EnumCreditStatus;
 import com.asimkilic.loan.application.gen.service.credit.BaseCreditCalculationService;
@@ -21,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static com.asimkilic.loan.application.converter.credit.CreditMapper.*;
 import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
@@ -49,7 +48,7 @@ class CreditService {
         Credit approvedCredit = INSTANCE.convertToCreditForApproved(customerDto, suitableCreditConstraint, calculateTotalCreditBalance, EnumCreditStatus.APPROVED, creditScore);
         approvedCredit.setCreationTime(getLocalDateTimeNow());
         creditEntityService.save(approvedCredit);
-        smsHandler.sendSms(customerDto.getPrimaryPhone(),CREDIT_APPLICATION_IS_APPROVED,approvedCredit.getCreditLimit());
+        smsHandler.sendSms(customerDto.getPrimaryPhone(), CREDIT_APPLICATION_IS_APPROVED, approvedCredit.getCreditLimit());
         return new ApprovedCreditResponse(calculateTotalCreditBalance);
     }
 
@@ -65,6 +64,15 @@ class CreditService {
         return true;
     }
 
+    public BaseCreditResponse findCreditResult(CreditResultRequestDto creditResultRequestDto) {
+
+        Credit credit = creditEntityService
+                .findCreditResultByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo())
+                .orElseThrow(() -> new CreditNotFoundException(CREDIT_NOT_FOUND));
+
+        return credit::getCreditStatus;
+
+    }
 
     private boolean doesCustomerHaveApprovedCreditByTurkishRepublicIdNo(String turkishRepublicIdNo) {
         return creditEntityService.doesCustomerHaveApprovedCreditByTurkishRepublicIdNo(turkishRepublicIdNo);

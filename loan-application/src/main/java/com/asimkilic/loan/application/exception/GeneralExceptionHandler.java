@@ -1,5 +1,6 @@
 package com.asimkilic.loan.application.exception;
 
+import com.asimkilic.loan.application.exception.credit.CreditNotFoundException;
 import com.asimkilic.loan.application.exception.customer.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -59,12 +60,19 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> phoneIsAlreadySavedException(PhoneIsAlreadySavedException exception) {
         return new ResponseEntity<>(exception.getMessage(), exception.httpStatus);
     }
+
     @ExceptionHandler(IllegalCustomerUpdateArgumentException.class)
     public ResponseEntity<?> illegalCustomerUpdateArgumentException(IllegalCustomerUpdateArgumentException exception) {
         return new ResponseEntity<>(exception.getMessage(), exception.httpStatus);
     }
+
     @ExceptionHandler(KpsServiceUnavailableException.class)
     public ResponseEntity<?> kpsServiceUnavailableException(KpsServiceUnavailableException exception) {
+        return new ResponseEntity<>(exception.getMessage(), exception.httpStatus);
+    }
+
+    @ExceptionHandler(CreditNotFoundException.class)
+    public ResponseEntity<?> creditNotFoundException(CreditNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), exception.httpStatus);
     }
 }

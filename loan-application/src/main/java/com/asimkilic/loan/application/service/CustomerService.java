@@ -1,6 +1,7 @@
 package com.asimkilic.loan.application.service;
 
 import com.asimkilic.loan.application.converter.customer.CustomerConverter;
+import com.asimkilic.loan.application.dto.credit.CreditResultRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerSaveRequestDto;
@@ -98,6 +99,13 @@ public class CustomerService {
         setDeletingCustomerStatusFalseAndUpdateTimeAndSave(customer);
     }
 
+    public BaseCreditResponse findCreditResult(CreditResultRequestDto creditResultRequestDto) {
+        CustomerDto customerDto = findCustomerByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo());
+        if(customerDto.getDateOfBirth()!=creditResultRequestDto.getDateOfBirth()){
+            throw new IllegalCustomerUpdateArgumentException(CUSTOMER_ARGUMENTS_INVALID);
+        }
+        return creditService.findCreditResult(creditResultRequestDto);
+    }
     //TODO: sadece birisini güncellerse hata?
     protected void validateUpdateCustomerCredentialsNotInUse(final Customer customer) {
         boolean inUse = customerEntityService
@@ -166,6 +174,7 @@ public class CustomerService {
         Instant instant = clock.instant();
         return LocalDateTime.ofInstant(instant, Clock.systemDefaultZone().getZone());
     }
+
 
 
 }

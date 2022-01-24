@@ -1,11 +1,13 @@
 package com.asimkilic.loan.application.controller;
 
+import com.asimkilic.loan.application.dto.credit.CreditResultRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerSaveRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
 import com.asimkilic.loan.application.gen.entity.BaseCreditResponse;
 import com.asimkilic.loan.application.service.CustomerService;
+import com.squareup.okhttp.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -57,12 +59,19 @@ public class CustomerController {
         CustomerDto customerDto = customerService.findCustomerById(id);
         return ResponseEntity.ok(customerDto);
     }
+
     @GetMapping("/trid/{trid}")
     @Operation(summary = "Returns a customer by customer Turkish Republic Id No")
-    public ResponseEntity<CustomerDto> getCustomerByTurkishRepublicIdNo(@PathVariable String trid){
+    public ResponseEntity<CustomerDto> getCustomerByTurkishRepublicIdNo(@PathVariable String trid) {
         CustomerDto customerDto = customerService.findCustomerByTurkishRepublicIdNo(trid);
         return ResponseEntity.ok(customerDto);
     }
-    // TODO : getbyid tckn metodları yazılacak.
+
+    @PostMapping("/credit")
+    @Operation(summary = "Returns the loan application result")
+    public ResponseEntity<BaseCreditResponse> getCreditResult(@RequestBody @Valid CreditResultRequestDto creditResultRequestDto) {
+        BaseCreditResponse response = customerService.findCreditResult(creditResultRequestDto);
+        return ResponseEntity.ok(response);
+    }
 
 }

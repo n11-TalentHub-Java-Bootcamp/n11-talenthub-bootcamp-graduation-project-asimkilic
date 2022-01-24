@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CreditRepository extends JpaRepository<Credit, String> {
@@ -31,8 +32,13 @@ public interface CreditRepository extends JpaRepository<Credit, String> {
 
     )
     CreditConstraint findSuitableCreditConstraint(BigDecimal customerSalary, BigDecimal creditScore);
+
+    Optional<Credit> findAllByCustomer_TurkishRepublicIdNoOrderByCreationTimeDesc(String turkishRepublicIdNo);
+
 }
 /*
+
+Optional<Credit> findCreditResultByTurkishRepublicIdNo(String turkishRepublicIdNo)
      this.id = id;
         this.creditLimit = creditLimit;
         this.percentageOfGuarantee = percentageOfGuarantee;

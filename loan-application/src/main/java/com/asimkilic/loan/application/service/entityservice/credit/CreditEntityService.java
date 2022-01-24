@@ -8,6 +8,8 @@ import com.asimkilic.loan.application.repository.credit.CreditRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class CreditEntityService extends BaseEntityService<Credit, CreditRepository> {
@@ -23,5 +25,8 @@ public class CreditEntityService extends BaseEntityService<Credit, CreditReposit
 
         return  getRepository().findSuitableCreditConstraint(customerSalary, creditScore);
 
+    }
+    public Optional<Credit> findCreditResultByTurkishRepublicIdNo(String turkishRepublicIdNo){
+        return getRepository().findAllByCustomer_TurkishRepublicIdNoOrderByCreationTimeDesc(turkishRepublicIdNo);
     }
 }
