@@ -17,9 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -101,7 +103,9 @@ public class CustomerService {
 
     public BaseCreditResponse findCreditResult(CreditResultRequestDto creditResultRequestDto) {
         CustomerDto customerDto = findCustomerByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo());
-        if(customerDto.getDateOfBirth()!=creditResultRequestDto.getDateOfBirth()){
+        String customerDtoDate = new SimpleDateFormat("yyyy-MM-dd").format(customerDto.getDateOfBirth());
+        String creditResultDtoDate = new SimpleDateFormat("yyyy-MM-dd").format(creditResultRequestDto.getDateOfBirth());
+        if(!customerDtoDate.equals(creditResultDtoDate)){
             throw new IllegalCustomerUpdateArgumentException(CUSTOMER_ARGUMENTS_INVALID);
         }
         return creditService.findCreditResult(creditResultRequestDto);

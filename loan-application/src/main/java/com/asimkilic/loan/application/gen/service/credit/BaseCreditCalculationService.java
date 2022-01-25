@@ -11,6 +11,7 @@ public abstract class BaseCreditCalculationService {
     protected BigDecimal creditLimit;
     protected BigDecimal percentageOfGuarantee;
     protected BigDecimal creditLimitMultiplierCoefficient;
+    // TODO : varsayılan olarak 4 değişirse sorun olacaktır bunu dinamik hale getir.
     protected final BigDecimal creditLimitMultiplierConstant = BigDecimal.valueOf(4);
 
     public abstract BigDecimal calculate(CreditCalculationRequestDto creditCalculationRequestDto);

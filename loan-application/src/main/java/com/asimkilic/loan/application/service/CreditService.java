@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Optional;
+
 
 import static com.asimkilic.loan.application.converter.credit.CreditMapper.*;
 import static com.asimkilic.loan.application.gen.message.InfoMessage.*;

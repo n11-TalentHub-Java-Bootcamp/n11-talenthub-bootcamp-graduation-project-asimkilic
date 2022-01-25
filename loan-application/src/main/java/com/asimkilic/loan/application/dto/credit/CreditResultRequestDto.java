@@ -14,7 +14,7 @@ import static com.asimkilic.loan.application.gen.message.InfoMessage.CUSTOMER_TR
 @Data
 @Schema(description = "It is used to query credit application")
 public class CreditResultRequestDto {
-    @NotBlank
+
     @NotNull(message = CUSTOMER_TR_ID_NO_DESCRIPTION)
     @Size(min = 11, max = 11, message = CUSTOMER_TR_ID_NO_DESCRIPTION)
     @Schema(description = CUSTOMER_TR_ID_NO_DESCRIPTION, example = "12345678912")
@@ -22,7 +22,6 @@ public class CreditResultRequestDto {
 
 
     @NotNull
-    @NotBlank
     @Schema(example = "1912-06-23", type = "string", format = "date")
     private Date dateOfBirth;
 
