@@ -13,6 +13,7 @@ import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
 @Schema(description = "It is used to save new customer")
 public class CustomerSaveRequestDto {
 
+    // TODO : TC KİMLİK NUMARASI REGEX PATTERN YAZ.
     @NotNull(message = CUSTOMER_TR_ID_NO_DESCRIPTION)
     @Size(min = 11, max = 11, message = CUSTOMER_TR_ID_NO_DESCRIPTION)
     @Schema(description = CUSTOMER_TR_ID_NO_DESCRIPTION,example = "12345678912")
