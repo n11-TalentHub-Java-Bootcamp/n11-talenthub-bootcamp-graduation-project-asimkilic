@@ -2,13 +2,13 @@
 <Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%style{%d{ISO8601}}{block} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%C{1.}}{bright,yellow}: %msg%n%throwable"></PatternLayout>
+            <PatternLayout pattern="%style{%d{ISO8601}}{block} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%X{requestid}}{bright,red} %style{%C{1.}}{bright,yellow}: %msg%n%throwable"></PatternLayout>
         </Console>
         <RollingFile name="RollingFile"
-                     fileName="/home/asimkilic/logs/spring-boot-logger-log4j2.log"
-                     filePattern="/home/asimkilic/logs/$${date:yyyy-MM}/spring-boot-logger-log4j2-%d{-dd-MMMM-yyyy}-%i.log.gz">
+                     fileName="./logs/spring-boot-logger-log4j2.log"
+                     filePattern="./logs/$${date:yyyy-MM}/spring-boot-logger-log4j2-%d{-dd-MMMM-yyyy}-%i.log.gz">
             <PatternLayout>
-                <pattern>%d %p %C{1.} [%t] %m%n</pattern>
+                <pattern>%d %p %C{1.} %X [%t] %m%n</pattern>
             </PatternLayout>
             <Policies>
                 <OnStartupTriggeringPolicy />

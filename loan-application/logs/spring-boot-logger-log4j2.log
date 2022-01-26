@@ -1,0 +1,54 @@
+2022-01-26 17:51:36,503 INFO o.h.v.i.u.Version {} [background-preinit] HV000001: Hibernate Validator 6.2.0.Final
+2022-01-26 17:51:36,550 INFO o.s.b.StartupInfoLogger {} [restartedMain] Starting LoanApplication using Java 17.0.1 on ubuntu with PID 25068 (/home/asimkilic/Desktop/graduation-project/n11-talenthub-bootcamp-graduation-project-asimkilic/loan-application/target/classes started by asimkilic in /home/asimkilic/Desktop/graduation-project/n11-talenthub-bootcamp-graduation-project-asimkilic/loan-application)
+2022-01-26 17:51:36,554 DEBUG o.s.b.StartupInfoLogger {} [restartedMain] Running with Spring Boot v2.6.2, Spring v5.3.14
+2022-01-26 17:51:36,555 INFO o.s.b.SpringApplication {} [restartedMain] No active profile set, falling back to default profiles: default
+2022-01-26 17:51:36,622 INFO o.s.b.l.DeferredLog {} [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-01-26 17:51:36,623 INFO o.s.b.l.DeferredLog {} [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-01-26 17:51:37,569 INFO o.s.d.r.c.RepositoryConfigurationDelegate {} [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode!
+2022-01-26 17:51:37,570 INFO o.s.d.r.c.RepositoryConfigurationDelegate {} [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-01-26 17:51:37,662 INFO o.s.d.r.c.RepositoryConfigurationDelegate {} [restartedMain] Finished Spring Data repository scanning in 82 ms. Found 3 JPA repository interfaces.
+2022-01-26 17:51:37,693 INFO o.s.d.r.c.RepositoryConfigurationDelegate {} [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode!
+2022-01-26 17:51:37,695 INFO o.s.d.r.c.RepositoryConfigurationDelegate {} [restartedMain] Bootstrapping Spring Data Reactive MongoDB repositories in DEFAULT mode.
+2022-01-26 17:51:37,704 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport {} [restartedMain] Spring Data Reactive MongoDB - Could not safely identify store assignment for repository candidate interface com.asimkilic.loan.application.repository.credit.CreditRepository. If you want this repository to be a Reactive MongoDB repository, consider annotating your entities with one of these annotations: org.springframework.data.mongodb.core.mapping.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.mongodb.repository.ReactiveMongoRepository.
+2022-01-26 17:51:37,705 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport {} [restartedMain] Spring Data Reactive MongoDB - Could not safely identify store assignment for repository candidate interface com.asimkilic.loan.application.repository.creditconstraint.CreditConstraintRepository. If you want this repository to be a Reactive MongoDB repository, consider annotating your entities with one of these annotations: org.springframework.data.mongodb.core.mapping.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.mongodb.repository.ReactiveMongoRepository.
+2022-01-26 17:51:37,706 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport {} [restartedMain] Spring Data Reactive MongoDB - Could not safely identify store assignment for repository candidate interface com.asimkilic.loan.application.repository.customer.CustomerRepository. If you want this repository to be a Reactive MongoDB repository, consider annotating your entities with one of these annotations: org.springframework.data.mongodb.core.mapping.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.mongodb.repository.ReactiveMongoRepository.
+2022-01-26 17:51:37,706 INFO o.s.d.r.c.RepositoryConfigurationDelegate {} [restartedMain] Finished Spring Data repository scanning in 10 ms. Found 0 Reactive MongoDB repository interfaces.
+2022-01-26 17:51:38,529 INFO o.s.b.w.e.t.TomcatWebServer {} [restartedMain] Tomcat initialized with port(s): 8080 (http)
+2022-01-26 17:51:38,540 INFO o.a.j.l.DirectJDKLog {} [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2022-01-26 17:51:38,541 INFO o.a.j.l.DirectJDKLog {} [restartedMain] Starting service [Tomcat]
+2022-01-26 17:51:38,542 INFO o.a.j.l.DirectJDKLog {} [restartedMain] Starting Servlet engine: [Apache Tomcat/9.0.56]
+2022-01-26 17:51:38,644 INFO o.a.j.l.DirectJDKLog {} [restartedMain] Initializing Spring embedded WebApplicationContext
+2022-01-26 17:51:38,645 INFO o.s.b.w.s.c.ServletWebServerApplicationContext {} [restartedMain] Root WebApplicationContext: initialization completed in 2022 ms
+2022-01-26 17:51:38,832 INFO o.h.j.i.u.LogHelper {} [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-01-26 17:51:38,898 INFO o.h.Version {} [restartedMain] HHH000412: Hibernate ORM core version 5.6.3.Final
+2022-01-26 17:51:39,040 INFO o.h.a.c.r.j.JavaReflectionManager {} [restartedMain] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-01-26 17:51:39,139 INFO c.z.h.HikariDataSource {} [restartedMain] HikariPool-1 - Starting...
+2022-01-26 17:51:39,296 INFO c.z.h.HikariDataSource {} [restartedMain] HikariPool-1 - Start completed.
+2022-01-26 17:51:39,315 INFO o.h.d.Dialect {} [restartedMain] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL10Dialect
+2022-01-26 17:51:40,048 INFO o.h.e.t.j.p.i.JtaPlatformInitiator {} [restartedMain] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-01-26 17:51:40,057 INFO o.s.o.j.AbstractEntityManagerFactoryBean {} [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-01-26 17:51:40,886 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration {} [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-01-26 17:51:41,879 INFO c.m.d.l.SLF4JLogger {} [restartedMain] Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2022-01-26 17:51:41,950 INFO c.m.d.l.SLF4JLogger {} [cluster-ClusterId{value='61f18a2d11d9760badf536a3', description='null'}-localhost:27017] Exception in monitor thread while connecting to server localhost:27017
+com.mongodb.MongoSocketOpenException: Exception opening socket
+	at com.mongodb.internal.connection.AsynchronousSocketChannelStream$OpenCompletionHandler.failed(AsynchronousSocketChannelStream.java:124) ~[mongodb-driver-core-4.4.0.jar:?]
+	at sun.nio.ch.Invoker.invokeUnchecked(Invoker.java:131) ~[?:?]
+	at sun.nio.ch.Invoker$2.run(Invoker.java:221) ~[?:?]
+	at sun.nio.ch.AsynchronousChannelGroupImpl$1.run(AsynchronousChannelGroupImpl.java:113) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[?:?]
+	at java.lang.Thread.run(Thread.java:833) [?:?]
+Caused by: java.net.ConnectException: Connection refused
+	at sun.nio.ch.UnixAsynchronousSocketChannelImpl.checkConnect(Native Method) ~[?:?]
+	at sun.nio.ch.UnixAsynchronousSocketChannelImpl.finishConnect(UnixAsynchronousSocketChannelImpl.java:256) ~[?:?]
+	at sun.nio.ch.UnixAsynchronousSocketChannelImpl.finish(UnixAsynchronousSocketChannelImpl.java:202) ~[?:?]
+	at sun.nio.ch.UnixAsynchronousSocketChannelImpl.onEvent(UnixAsynchronousSocketChannelImpl.java:217) ~[?:?]
+	at sun.nio.ch.EPollPort$EventHandlerTask.run(EPollPort.java:306) ~[?:?]
+	... 1 more
+2022-01-26 17:51:42,218 INFO o.s.b.d.a.OptionalLiveReloadServer {} [restartedMain] LiveReload server is running on port 35729
+2022-01-26 17:51:42,250 INFO o.a.j.l.DirectJDKLog {} [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2022-01-26 17:51:42,269 INFO o.s.b.w.e.t.TomcatWebServer {} [restartedMain] Tomcat started on port(s): 8080 (http) with context path ''
+2022-01-26 17:51:42,284 INFO o.s.b.StartupInfoLogger {} [restartedMain] Started LoanApplication in 6.206 seconds (JVM running for 8.205)
+2022-01-26 17:51:49,745 INFO o.s.o.j.AbstractEntityManagerFactoryBean {} [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-01-26 17:51:49,749 INFO c.z.h.HikariDataSource {} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2022-01-26 17:51:49,761 INFO c.z.h.HikariDataSource {} [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.

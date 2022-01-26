@@ -13,6 +13,7 @@ import com.asimkilic.loan.application.gen.service.credit.BaseCreditScoreInquiryS
 import com.asimkilic.loan.application.gen.service.notification.sms.SmsHandler;
 import com.asimkilic.loan.application.service.entityservice.credit.CreditEntityService;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.ThreadContext;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -48,7 +49,7 @@ class CreditService {
         Credit approvedCredit = INSTANCE.convertToCreditForApproved(customerDto, suitableCreditConstraint, calculateTotalCreditBalance, EnumCreditStatus.APPROVED, creditScore);
         approvedCredit.setCreationTime(getLocalDateTimeNow());
         creditEntityService.save(approvedCredit);
-        smsHandler.sendSms(customerDto.getPrimaryPhone(), CREDIT_APPLICATION_IS_APPROVED, approvedCredit.getCreditLimit());
+        smsHandler.sendSms(customerDto.getPrimaryPhone(), CREDIT_APPLICATION_IS_APPROVED, approvedCredit.getCreditLimit(), ThreadContext.get("requestid"));
         return new ApprovedCreditResponse(calculateTotalCreditBalance);
     }
 
@@ -58,7 +59,7 @@ class CreditService {
             Credit credit = INSTANCE.convertToCreditForDenied(customerDto, EnumCreditStatus.DENIED, creditScore);
             credit.setCreationTime(getLocalDateTimeNow());
             creditEntityService.save(credit);
-            smsHandler.sendSms(customerDto.getPrimaryPhone(), CREDIT_APPLICATION_IS_DENIED);
+            smsHandler.sendSms(customerDto.getPrimaryPhone(), CREDIT_APPLICATION_IS_DENIED, ThreadContext.get("requestid"));
             return false;
         }
         return true;

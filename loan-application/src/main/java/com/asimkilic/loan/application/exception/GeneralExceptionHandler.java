@@ -2,6 +2,8 @@ package com.asimkilic.loan.application.exception;
 
 import com.asimkilic.loan.application.exception.credit.CreditNotFoundException;
 import com.asimkilic.loan.application.exception.customer.*;
+import com.twilio.exception.ApiException;
+import org.apache.logging.log4j.ThreadContext;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,9 +39,10 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
         HttpServletRequest req = ((ServletWebRequest) request).getRequest();
+
         ErrorResponse errorResponse = ErrorResponseBuilder
                 .getInstance()
-                .withErrorId("LoanApplication-" + LocalDateTime.now(ZoneOffset.UTC))
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
                 .withPath(req.getRequestURI())
                 .withErrors(errors)
                 .withMessage(ex.getMessage())
@@ -54,7 +57,7 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> errors = Arrays.asList(ex.getMessage());
         ErrorResponse errorResponse = ErrorResponseBuilder
                 .getInstance()
-                .withErrorId("LoanApplication-" + LocalDateTime.now(ZoneOffset.UTC))
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
                 .withPath(request.getRequestURI())
                 .withErrors(errors)
                 .withMessage(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
@@ -69,7 +72,7 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponseBuilder
                 .getInstance()
-                .withErrorId("LoanApplication-" + LocalDateTime.now(ZoneOffset.UTC))
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
                 .withPath(request.getRequestURI())
                 .withErrors(errors)
                 .withMessage(ex.getMessage())
@@ -86,7 +89,7 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
         }
         ErrorResponse errorResponse = ErrorResponseBuilder
                 .getInstance()
-                .withErrorId("LoanApplication-" + LocalDateTime.now(ZoneOffset.UTC))
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
                 .withPath(request.getRequestURI())
                 .withErrors(errors)
                 .withMessage(ex.getMessage())
@@ -101,7 +104,7 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> errors = List.of(ex.getMessage());
         ErrorResponse errorResponse = ErrorResponseBuilder
                 .getInstance()
-                .withErrorId("LoanApplication-" + LocalDateTime.now(ZoneOffset.UTC))
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
                 .withPath(request.getRequestURI())
                 .withErrors(errors)
                 .withMessage(ex.getMessage())
@@ -116,7 +119,7 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponseBuilder
                 .getInstance()
-                .withErrorId("LoanApplication-" + LocalDateTime.now(ZoneOffset.UTC))
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
                 .withPath(request.getRequestURI())
                 .withErrors(errors)
                 .withMessage(ex.getMessage())
@@ -131,7 +134,7 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponseBuilder
                 .getInstance()
-                .withErrorId("LoanApplication-" + LocalDateTime.now(ZoneOffset.UTC))
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
                 .withPath(request.getRequestURI())
                 .withErrors(errors)
                 .withMessage(ex.getMessage())
@@ -146,7 +149,7 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponseBuilder
                 .getInstance()
-                .withErrorId("LoanApplication-" + LocalDateTime.now(ZoneOffset.UTC))
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
                 .withPath(request.getRequestURI())
                 .withErrors(errors)
                 .withMessage(ex.getMessage())
@@ -160,7 +163,7 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> errors = Arrays.asList(ex.getMessage());
         ErrorResponse errorResponse = ErrorResponseBuilder
                 .getInstance()
-                .withErrorId("LoanApplication-" + LocalDateTime.now(ZoneOffset.UTC))
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
                 .withPath(request.getRequestURI())
                 .withErrors(errors)
                 .withMessage(ex.getMessage())
@@ -175,7 +178,7 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponseBuilder
                 .getInstance()
-                .withErrorId("LoanApplication-" + LocalDateTime.now(ZoneOffset.UTC))
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
                 .withPath(request.getRequestURI())
                 .withErrors(errors)
                 .withMessage(ex.getMessage())
@@ -190,13 +193,28 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponseBuilder
                 .getInstance()
-                .withErrorId("LoanApplication-" + LocalDateTime.now(ZoneOffset.UTC))
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
                 .withPath(request.getRequestURI())
                 .withErrors(errors)
                 .withMessage(ex.getMessage())
                 .withStatus(ex.httpStatus.value())
                 .build();
         return new ResponseEntity<ErrorResponse>(errorResponse, ex.httpStatus);
+    }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ErrorResponse> handleTwilioApiException(ApiException ex, HttpServletRequest request) {
+        List<String> errors = Arrays.asList(ex.getMessage());
+
+        ErrorResponse errorResponse = ErrorResponseBuilder
+                .getInstance()
+                .withErrorId("LoanApplication-" + ThreadContext.get("requestid"))
+                .withPath(request.getRequestURI())
+                .withErrors(errors)
+                .withMessage(ex.getMessage())
+                .withStatus(ex.getStatusCode())
+                .build();
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.valueOf(ex.getStatusCode()));
     }
 
 }

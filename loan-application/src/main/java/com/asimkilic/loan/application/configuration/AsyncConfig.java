@@ -25,8 +25,8 @@ public class AsyncConfig extends AsyncConfigurerSupport {
         return taskExecutor;
     }
 
-    @Override
+   @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return asyncExceptionHandler;
-    }
+       return asyncExceptionHandler;
+   }
 }
