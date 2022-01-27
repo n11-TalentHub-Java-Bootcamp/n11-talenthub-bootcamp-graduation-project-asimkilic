@@ -69,13 +69,20 @@ public class CustomerService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerDto updateCustomer(CustomerUpdateRequestDto customerUpdateRequestDto) {
+        validateUpdateCustomerEmailCredentialNotInUse(customerUpdateRequestDto);
+        validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerUpdateRequestDto);
         Customer customer = INSTANCE.convertToCustomer(customerUpdateRequestDto);
-        validateUpdateCustomerCredentialsNotInUse(customer);
         customer.setUpdateTime(getLocalDateTimeNow());
         customer = customerEntityService.save(customer);
         return INSTANCE.convertToCustomerDto(customer);
     }
+    /*Customer customer = generateCustomer();
 
+        Mockito.when(customerRepository.findById("customer-id")).thenReturn(Optional.of(customer));
+
+    Customer result = service.findCustomerById("customer-id");
+
+    assertEquals(result, customer);*/
 
     public CustomerDto findCustomerById(String customerId) {
         Customer customer = customerEntityService
@@ -110,22 +117,24 @@ public class CustomerService {
         return creditService.findCreditResult(creditResultRequestDto);
     }
 
-
-    protected void validateUpdateCustomerCredentialsNotInUse(final Customer customer) {
-        if (customer.getEmail() != null) {
-            boolean emailInUse = customerEntityService.validateUpdateCustomerEmailCredentialNotInUse(customer.getId(), customer.getEmail());
+    protected void validateUpdateCustomerEmailCredentialNotInUse(final CustomerUpdateRequestDto customerRequestDto){
+        if (customerRequestDto.getEmail() != null) {
+            boolean emailInUse = customerEntityService.validateUpdateCustomerEmailCredentialNotInUse(customerRequestDto.getId(), customerRequestDto.getEmail());
             if (emailInUse) {
                 throw new EmailIsAlreadySavedException(EMAIL_IS_ALREADY_SAVED);
             }
         }
-        if (customer.getEmail() != null) {
-            boolean phoneInUse = customerEntityService.validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customer.getId(), customer.getPrimaryPhone());
+    }
+    protected void validateUpdateCustomerPrimaryPhoneCredentialNotInUse(final CustomerUpdateRequestDto customerRequestDto){
+        if (customerRequestDto.getPrimaryPhone() != null) {
+            boolean phoneInUse = customerEntityService.validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerRequestDto.getId(), customerRequestDto.getPrimaryPhone());
             if (phoneInUse) {
                 throw new PhoneIsAlreadySavedException(PHONE_NUMBER_IS_ALREADY_SAVED);
             }
         }
-
     }
+
+
 
     protected boolean existsCustomerByTurkishRepublicIdNo(String turkishRepublicIdNo) {
         return customerEntityService.existsCustomerByTurkishRepublicIdNo(turkishRepublicIdNo);
@@ -183,9 +192,9 @@ public class CustomerService {
     }
 
     private LocalDateTime getLocalDateTimeNow() {
-        Instant instant = clock.instant();
-        return LocalDateTime.ofInstant(instant, Clock.systemDefaultZone().getZone());
+        return LocalDateTime.now();
+        // Instant instant = clock.instant();
+        // return LocalDateTime.ofInstant(instant, Clock.systemDefaultZone().getZone());
     }
-
 
 }

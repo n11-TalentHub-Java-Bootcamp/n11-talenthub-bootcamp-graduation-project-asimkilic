@@ -1,6 +1,7 @@
 package com.asimkilic.loan.application.dto.customer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Data
 @Schema(description = "It is used to view the Customer")
+@Builder
 public class CustomerDto {
 
     private String id;
