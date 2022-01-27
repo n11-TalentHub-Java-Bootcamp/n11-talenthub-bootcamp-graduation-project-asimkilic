@@ -1,8 +1,10 @@
 package com.asimkilic.loan.application;
 
+import com.asimkilic.loan.application.dto.credit.CreditResultRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
+import com.asimkilic.loan.application.entity.Credit;
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
 
@@ -44,6 +46,20 @@ public class TestSupport {
         return updateRequestDto;
     }
 
+    public CreditResultRequestDto getFirstCustomerCreditRequestDto() {
+        CreditResultRequestDto requestDto = CreditResultRequestDto.builder()
+                .turkishRepublicIdNo("10020030040")
+                .dateOfBirth(new Date(1991, Calendar.JANUARY, 1))
+                .build();
+        return requestDto;
+    }
+    public CreditResultRequestDto getSecondCustomerCreditRequestDto() {
+        CreditResultRequestDto requestDto = CreditResultRequestDto.builder()
+                .turkishRepublicIdNo("20020030040")
+                .dateOfBirth(new Date(1992, 2, 2))
+                .build();
+        return requestDto;
+    }
     public List<Customer> getAllCustomer() {
         List<Customer> allCustomers = new ArrayList<>();
         Customer firstCustomer = Customer.builder()
@@ -141,7 +157,6 @@ public class TestSupport {
 
         return Instant.now(clock);
     }
-
 
     public LocalDateTime getLocalDateTime() {
         return LocalDateTime.ofInstant(getCurrentInstant(), Clock.systemDefaultZone().getZone());

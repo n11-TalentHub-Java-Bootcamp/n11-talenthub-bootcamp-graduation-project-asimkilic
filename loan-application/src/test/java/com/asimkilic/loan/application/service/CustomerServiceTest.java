@@ -1,38 +1,35 @@
 package com.asimkilic.loan.application.service;
 
 import com.asimkilic.loan.application.TestSupport;
-import com.asimkilic.loan.application.converter.customer.CustomerMapper;
-import com.asimkilic.loan.application.converter.customer.CustomerMapperImpl;
+import com.asimkilic.loan.application.dto.credit.ApprovedCreditResponse;
+import com.asimkilic.loan.application.dto.credit.CreditResultRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.exception.customer.CustomerNotFoundException;
 import com.asimkilic.loan.application.exception.customer.EmailIsAlreadySavedException;
+import com.asimkilic.loan.application.exception.customer.IllegalCustomerUpdateArgumentException;
 import com.asimkilic.loan.application.exception.customer.PhoneIsAlreadySavedException;
+import com.asimkilic.loan.application.gen.entity.BaseCreditResponse;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
 import com.asimkilic.loan.application.gen.service.turkishrepublicidno.BaseTurkishRepublicIdNoVerificationService;
 import com.asimkilic.loan.application.service.entityservice.customer.CustomerEntityService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
-import static com.asimkilic.loan.application.converter.customer.CustomerMapper.INSTANCE;
+import static com.asimkilic.loan.application.gen.enums.EnumCreditStatus.APPROVED;
+import static com.asimkilic.loan.application.gen.enums.EnumCreditStatus.DENIED;
+import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,8 +45,7 @@ class CustomerServiceTest extends TestSupport {
     @Mock
     private CreditService creditService;
 
-    @Mock
-    private Clock clock = Clock.systemUTC();
+
 
 
     @Test
@@ -180,16 +176,64 @@ class CustomerServiceTest extends TestSupport {
 
         customerService.validateUpdateCustomerEmailCredentialNotInUse(customerUpdateRequestDto);
 
-        verify(customerEntityService, times(1)).validateUpdateCustomerEmailCredentialNotInUse(any(), any());
+        verify(customerEntityService, times(1)).validateUpdateCustomerEmailCredentialNotInUse(customerUpdateRequestDto.getId(), customerUpdateRequestDto.getEmail());
     }
 
     @Test
-    void testValidateUpdateCustomerEmailCredentialNotInUse_whenUpdateEmailNotNullAndInUseAnotherCustomer_shouldThrowEmailIsAlreadySavedException() {
+    void testValidateUpdateCustomerEmailCredentialNotInUse_whenUpdateEmailIsNotNullAndInUseAnotherCustomer_shouldThrowEmailIsAlreadySavedException() {
         CustomerUpdateRequestDto customerUpdateRequestDto = getFirstCustomerUpdateRequestDto();
         when(customerEntityService.validateUpdateCustomerEmailCredentialNotInUse(customerUpdateRequestDto.getId(), customerUpdateRequestDto.getEmail())).thenReturn(Boolean.TRUE);
         assertThrows(EmailIsAlreadySavedException.class, () -> customerService.validateUpdateCustomerEmailCredentialNotInUse(customerUpdateRequestDto));
     }
 
+    @Test
+    void testValidateUpdateCustomerPrimaryPhoneCredentialNotInUse_whenUpdatePrimaryPhoneIsNull_shouldDoNothing() {
+        CustomerUpdateRequestDto customerUpdateRequestDto = getFirstCustomerUpdateRequestDto();
+        customerUpdateRequestDto.setPrimaryPhone(null);
+        verify(customerEntityService, never()).validateUpdateCustomerPrimaryPhoneCredentialNotInUse(any(), any());
+    }
+
+    @Test
+    void testValidateUpdateCustomerPrimaryPhoneCredentialsNotInUse_whenUpdatePrimaryPhoneIsNotNullAndInUseAnotherCustomer_shouldThrowPhoneIsAlreadySavedException() {
+        CustomerUpdateRequestDto customerUpdateRequestDto = getFirstCustomerUpdateRequestDto();
+        when(customerEntityService.validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerUpdateRequestDto.getId(), customerUpdateRequestDto.getPrimaryPhone())).thenReturn(Boolean.TRUE);
+        PhoneIsAlreadySavedException ex = assertThrows(PhoneIsAlreadySavedException.class, () -> customerService.validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerUpdateRequestDto));
+        assertEquals(PHONE_NUMBER_IS_ALREADY_SAVED, ex.getMessage());
+    }
+
+    @Test
+    void testValidateUpdateCustomerPrimaryPhoneCredentialsNotInUse_whenUpdatePrimaryPhoneIsNotNull_shouldCallCustomerEntityService() {
+        CustomerUpdateRequestDto customerUpdateRequestDto = getFirstCustomerUpdateRequestDto();
+        when(customerEntityService.validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerUpdateRequestDto.getId(), customerUpdateRequestDto.getPrimaryPhone())).thenReturn(Boolean.FALSE);
+        customerService.validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerUpdateRequestDto);
+        verify(customerEntityService, times(1)).validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerUpdateRequestDto.getId(), customerUpdateRequestDto.getPrimaryPhone());
+    }
+
+    @Test
+    void testFindCreditResult_whenCreditResultRequestDtoDateOfBirthDoesNotMatchCustomerDateOfBirth_shouldThrowIllegalCustomerUpdateArgumentException() {
+        Customer customer = getFirstCustomer();
+        CreditResultRequestDto creditResultRequestDto = getSecondCustomerCreditRequestDto();
+        when(customerEntityService.findCustomerByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo())).thenReturn(Optional.of(customer));
+        IllegalCustomerUpdateArgumentException ex = assertThrows(IllegalCustomerUpdateArgumentException.class, () -> customerService.findCreditResult(creditResultRequestDto));
+        assertEquals(CUSTOMER_ARGUMENTS_INVALID, ex.getMessage());
+
+    }
+
+    @Test
+    void testFindCreditResult_whenCreditResultRequestDtoDateOfBirthDoesMatchCustomerDateOfBirth_shouldReturnBaseCreditResponse() {
+        Customer customer = getFirstCustomer();
+        CreditResultRequestDto creditResultRequestDto = getFirstCustomerCreditRequestDto();
+
+
+        when(customerEntityService.findCustomerByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo())).thenReturn(Optional.of(customer));
+        ApprovedCreditResponse app = new ApprovedCreditResponse();
+        when(creditService.findCreditResult(creditResultRequestDto)).thenReturn(app);
+        BaseCreditResponse creditResult = customerService.findCreditResult(creditResultRequestDto);
+
+
+        verify(creditService, times(1)).findCreditResult(creditResultRequestDto);
+        assertTrue(creditResult.getResponse() == DENIED || creditResult.getResponse() == APPROVED);
+    }
 
     @Test
     void saveNewCustomer() {
@@ -197,11 +241,6 @@ class CustomerServiceTest extends TestSupport {
 
     @Test
     void updateCustomer() {
-    }
-
-
-    @Test
-    void findCreditResult() {
     }
 
 

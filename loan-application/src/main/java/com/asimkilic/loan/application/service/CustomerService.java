@@ -72,17 +72,11 @@ public class CustomerService {
         validateUpdateCustomerEmailCredentialNotInUse(customerUpdateRequestDto);
         validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerUpdateRequestDto);
         Customer customer = INSTANCE.convertToCustomer(customerUpdateRequestDto);
+        // db den nesneyi çek bunları ona aktar sonra kaydet
         customer.setUpdateTime(getLocalDateTimeNow());
         customer = customerEntityService.save(customer);
         return INSTANCE.convertToCustomerDto(customer);
     }
-    /*Customer customer = generateCustomer();
-
-        Mockito.when(customerRepository.findById("customer-id")).thenReturn(Optional.of(customer));
-
-    Customer result = service.findCustomerById("customer-id");
-
-    assertEquals(result, customer);*/
 
     public CustomerDto findCustomerById(String customerId) {
         Customer customer = customerEntityService
@@ -109,9 +103,9 @@ public class CustomerService {
 
     public BaseCreditResponse findCreditResult(CreditResultRequestDto creditResultRequestDto) {
         CustomerDto customerDto = findCustomerByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo());
-        String customerDtoDate = new SimpleDateFormat("yyyy-MM-dd").format(customerDto.getDateOfBirth());
-        String creditResultDtoDate = new SimpleDateFormat("yyyy-MM-dd").format(creditResultRequestDto.getDateOfBirth());
-        if (!customerDtoDate.equals(creditResultDtoDate)) {
+        String dateOfBirthOfCustomerDtoDate = new SimpleDateFormat("yyyy-MM-dd").format(customerDto.getDateOfBirth());
+        String dateOfBirthOfCreditResultDtoDate = new SimpleDateFormat("yyyy-MM-dd").format(creditResultRequestDto.getDateOfBirth());
+        if (!dateOfBirthOfCustomerDtoDate.equals(dateOfBirthOfCreditResultDtoDate)) {
             throw new IllegalCustomerUpdateArgumentException(CUSTOMER_ARGUMENTS_INVALID);
         }
         return creditService.findCreditResult(creditResultRequestDto);
@@ -133,8 +127,6 @@ public class CustomerService {
             }
         }
     }
-
-
 
     protected boolean existsCustomerByTurkishRepublicIdNo(String turkishRepublicIdNo) {
         return customerEntityService.existsCustomerByTurkishRepublicIdNo(turkishRepublicIdNo);

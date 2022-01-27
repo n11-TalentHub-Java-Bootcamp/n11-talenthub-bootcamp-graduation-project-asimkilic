@@ -1,6 +1,7 @@
 package com.asimkilic.loan.application.dto.credit;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -13,6 +14,7 @@ import static com.asimkilic.loan.application.gen.message.InfoMessage.CUSTOMER_TR
 
 @Data
 @Schema(description = "It is used to query credit application")
+@Builder
 public class CreditResultRequestDto {
 
     @NotNull(message = CUSTOMER_TR_ID_NO_DESCRIPTION)
