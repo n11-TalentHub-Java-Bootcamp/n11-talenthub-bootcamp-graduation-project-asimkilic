@@ -7,6 +7,7 @@ import com.asimkilic.loan.application.repository.customer.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,6 +16,9 @@ public class CustomerEntityService extends BaseEntityService<Customer, CustomerR
         super(repository);
     }
 
+    public List<Customer> findAllActiveCustomers(){
+        return getRepository().findAllByStatus(EnumCustomerStatus.ACTIVE);
+    }
     public Optional<Customer> findCustomerByTurkishRepublicIdNo(String turkishRepublicIdNo) {
         return getRepository().findCustomerByTurkishRepublicIdNoAndStatus(turkishRepublicIdNo, EnumCustomerStatus.ACTIVE);
     }
@@ -43,8 +47,11 @@ public class CustomerEntityService extends BaseEntityService<Customer, CustomerR
         return getRepository().existsCustomerByPrimaryPhoneAndStatus(primaryPhone, EnumCustomerStatus.ACTIVE);
     }
 
-    public boolean validateUpdateCustomerCredentialsNotInUse(String customerId,String email, String primaryPhone) {
-        return getRepository().validateUpdateCustomerCredentialsNotInUse(customerId,email, primaryPhone);
+    public boolean validateUpdateCustomerEmailCredentialNotInUse(String customerId,String email) {
+        return getRepository().validateUpdateCustomerEmailCredentialNotInUse(customerId,email);
+    }
+    public boolean validateUpdateCustomerPrimaryPhoneCredentialNotInUse(String customerId,  String primaryPhone) {
+        return getRepository().validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerId, primaryPhone);
     }
 
  /*   public boolean validateNewCustomerCredentialsNotInUse(String turkishRepublicIdNo, String email, String primaryPhone) {

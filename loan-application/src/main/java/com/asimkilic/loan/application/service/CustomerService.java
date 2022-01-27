@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,11 +37,11 @@ public class CustomerService {
 
     private final Clock clock;
 
+
     public List<CustomerDto> findAllUsers() {
         return customerEntityService
-                .findAll()
+                .findAllActiveCustomers()
                 .stream()
-                .filter(x -> x.getStatus() == EnumCustomerStatus.ACTIVE)
                 .map(INSTANCE::convertToCustomerDto)
                 .collect(Collectors.toList());
 
@@ -105,18 +104,27 @@ public class CustomerService {
         CustomerDto customerDto = findCustomerByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo());
         String customerDtoDate = new SimpleDateFormat("yyyy-MM-dd").format(customerDto.getDateOfBirth());
         String creditResultDtoDate = new SimpleDateFormat("yyyy-MM-dd").format(creditResultRequestDto.getDateOfBirth());
-        if(!customerDtoDate.equals(creditResultDtoDate)){
+        if (!customerDtoDate.equals(creditResultDtoDate)) {
             throw new IllegalCustomerUpdateArgumentException(CUSTOMER_ARGUMENTS_INVALID);
         }
         return creditService.findCreditResult(creditResultRequestDto);
     }
-    //TODO: sadece birisini güncellerse hata?
+
+
     protected void validateUpdateCustomerCredentialsNotInUse(final Customer customer) {
-        boolean inUse = customerEntityService
-                .validateUpdateCustomerCredentialsNotInUse(customer.getId(), customer.getEmail(), customer.getPrimaryPhone());
-        if (inUse) {
-            throw new IllegalCustomerUpdateArgumentException(CUSTOMER_ARGUMENTS_INVALID);
+        if (customer.getEmail() != null) {
+            boolean emailInUse = customerEntityService.validateUpdateCustomerEmailCredentialNotInUse(customer.getId(), customer.getEmail());
+            if (emailInUse) {
+                throw new EmailIsAlreadySavedException(EMAIL_IS_ALREADY_SAVED);
+            }
         }
+        if (customer.getEmail() != null) {
+            boolean phoneInUse = customerEntityService.validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customer.getId(), customer.getPrimaryPhone());
+            if (phoneInUse) {
+                throw new PhoneIsAlreadySavedException(PHONE_NUMBER_IS_ALREADY_SAVED);
+            }
+        }
+
     }
 
     protected boolean existsCustomerByTurkishRepublicIdNo(String turkishRepublicIdNo) {
@@ -178,7 +186,6 @@ public class CustomerService {
         Instant instant = clock.instant();
         return LocalDateTime.ofInstant(instant, Clock.systemDefaultZone().getZone());
     }
-
 
 
 }

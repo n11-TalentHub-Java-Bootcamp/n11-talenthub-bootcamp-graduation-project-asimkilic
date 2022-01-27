@@ -28,13 +28,13 @@ public class CustomerUpdateRequestDto {
 
 
 
-    @Pattern(regexp = "[1-9]+[0-9]*",
+    @Pattern(regexp = "^(5)([0-9]{2})\\s?([0-9]{3})\\s?([0-9]{2})\\s?([0-9]{2})$",
             message = PHONE_NUMBER_FORMAT_MESSAGE)
     @Schema(example = "5321231234")
     private String primaryPhone;
 
 
-    @Pattern(regexp = "[1-9]+[0-9]*",
+    @Pattern(regexp = "^(5)([0-9]{2})\\s?([0-9]{3})\\s?([0-9]{2})\\s?([0-9]{2})$",
             message = PHONE_NUMBER_FORMAT_MESSAGE)
     @Schema(example = "5321231235")
     private String secondaryPhone;

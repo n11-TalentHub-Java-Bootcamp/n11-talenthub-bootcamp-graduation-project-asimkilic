@@ -16,7 +16,6 @@ public class SmsHandler {
 
     @Async
     public void sendSms(String phone, String message, BigDecimal creditLimit,String requestid) {
-        // TODO concat stringbuffer ile yapılabilir.
         String concatPhone = "+90".concat(phone);
         smsSender.sendSms(new SmsRequest("+90".concat(concatPhone), message + " Credit limit is : " + creditLimit.toString()));
 

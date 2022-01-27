@@ -15,14 +15,11 @@ import java.util.List;
 @Component
 public class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
     private static final Logger logger = LogManager.getLogger(AsyncExceptionHandler.class);
-    //private static final Logger LOGGER = LoggerFactory.getLogger(TwilioSmsSender.class);
 
-    // TODO : com.twilio.exception.ApiException daha spesifik handle et
+
+
     @Override
     public void handleUncaughtException(Throwable ex, Method method, Object... params) {
-        //LOGGER.error("\n\t Exception: {}  \n\t  Method Name: {} \n\t  args: {}  ", ex, method.getName(), Arrays.toString(params));
-        //logger.error("\n\t Exception: {}  \n\t  Method Name: {} \n\t  args: {}  ", ex, method.getName(), Arrays.toString(params));
-
 
         logger.error("Error Id = {} Exception in {}.{} with cause = {}, with message ={} params = {}",
                 Arrays.asList(params).get(params.length - 1),
