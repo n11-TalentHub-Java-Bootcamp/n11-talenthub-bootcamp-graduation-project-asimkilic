@@ -1,9 +1,7 @@
 package com.asimkilic.loan.application;
 
 import com.asimkilic.loan.application.dto.credit.CreditResultRequestDto;
-import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
-import com.asimkilic.loan.application.dto.customer.CustomerDto;
-import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
+import com.asimkilic.loan.application.dto.customer.*;
 import com.asimkilic.loan.application.entity.Credit;
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
@@ -12,10 +10,7 @@ import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class TestSupport {
 
@@ -26,6 +21,22 @@ public class TestSupport {
 
     public CustomerDto getFirstCustomerDto() {
         return convertToCustomerDto().get(0);
+    }
+
+    public CustomerSaveRequestDto getFirstCustomerSaveRequestDto() {
+        CustomerSaveRequestDto saveRequestDto = CustomerSaveRequestDto.builder()
+                .turkishRepublicIdNo("10020030040")
+                .firstName("customer-1")
+                .lastName("customer-1")
+                .dateOfBirth(new Date(1991, Calendar.JANUARY, 1))
+                .email("customer-1@customer.com")
+                .monthlySalary(BigDecimal.valueOf(1500))
+                .amountOfGuarantee(BigDecimal.valueOf(2000))
+                .primaryPhone("5329998877")
+                .secondaryPhone("5339998877")
+                .build();
+        return saveRequestDto;
+
     }
 
     public CustomerDeleteRequestDto getFirstCustomerDeleteRequestDto() {
@@ -53,6 +64,7 @@ public class TestSupport {
                 .build();
         return requestDto;
     }
+
     public CreditResultRequestDto getSecondCustomerCreditRequestDto() {
         CreditResultRequestDto requestDto = CreditResultRequestDto.builder()
                 .turkishRepublicIdNo("20020030040")
@@ -60,6 +72,18 @@ public class TestSupport {
                 .build();
         return requestDto;
     }
+
+    public VerifyCustomerTurkishRepublicIdNoRequestDto getFirstCustomerVerifyTurkishRepublicIdNoRequestDto() {
+        Customer customer = getFirstCustomer();
+        VerifyCustomerTurkishRepublicIdNoRequestDto dto = VerifyCustomerTurkishRepublicIdNoRequestDto.builder()
+                .firstName(customer.getFirstName().toUpperCase(Locale.ROOT))
+                .lastName(customer.getLastName().toUpperCase(Locale.ROOT))
+                .yearOfBirth(String.valueOf(customer.getDateOfBirth().getYear() + 1900))
+                .turkishRepublicIdentityNo(customer.getTurkishRepublicIdNo()).build();
+
+        return dto;
+    }
+
     public List<Customer> getAllCustomer() {
         List<Customer> allCustomers = new ArrayList<>();
         Customer firstCustomer = Customer.builder()

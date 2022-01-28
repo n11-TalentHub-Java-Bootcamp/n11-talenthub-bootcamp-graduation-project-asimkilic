@@ -1,6 +1,7 @@
 package com.asimkilic.loan.application.dto.customer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.*;
@@ -11,6 +12,7 @@ import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
 
 @Data
 @Schema(description = "It is used to save new customer")
+@Builder
 public class CustomerSaveRequestDto {
 
 

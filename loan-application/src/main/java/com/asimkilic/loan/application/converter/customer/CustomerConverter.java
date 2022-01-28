@@ -1,5 +1,7 @@
 package com.asimkilic.loan.application.converter.customer;
 
+import com.asimkilic.loan.application.dto.customer.CustomerSaveRequestDto;
+import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
 import com.asimkilic.loan.application.dto.customer.VerifyCustomerTurkishRepublicIdNoRequestDto;
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
@@ -14,7 +16,7 @@ public class CustomerConverter {
         VerifyCustomerTurkishRepublicIdNoRequestDto dto = VerifyCustomerTurkishRepublicIdNoRequestDto.builder()
                 .firstName(customer.getFirstName().toUpperCase(Locale.ROOT))
                 .lastName(customer.getLastName().toUpperCase(Locale.ROOT))
-                .yearOfBirth(String.valueOf(customer.getDateOfBirth().getYear()+1900))
+                .yearOfBirth(String.valueOf(customer.getDateOfBirth().getYear() + 1900))
                 .turkishRepublicIdentityNo(customer.getTurkishRepublicIdNo()).build();
 
         return dto;
@@ -31,5 +33,24 @@ public class CustomerConverter {
             target.setAmountOfGuarantee(source.getAmountOfGuarantee());
         }
         return target;
+    }
+
+    public static void convertUpdatedCustomerToExistCustomer(CustomerUpdateRequestDto updatedCustomer, Customer persistCustomer) {
+        if (updatedCustomer.getPrimaryPhone() != null) {
+            persistCustomer.setPrimaryPhone(updatedCustomer.getPrimaryPhone());
+        }
+        if (updatedCustomer.getEmail() != null) {
+            persistCustomer.setEmail(updatedCustomer.getEmail());
+        }
+        if (updatedCustomer.getMonthlySalary() != null) {
+            persistCustomer.setMonthlySalary(updatedCustomer.getMonthlySalary());
+        }
+        if (updatedCustomer.getAmountOfGuarantee() != null) {
+            persistCustomer.setAmountOfGuarantee(updatedCustomer.getAmountOfGuarantee());
+        }
+        if (updatedCustomer.getSecondaryPhone() != null) {
+            persistCustomer.setSecondaryPhone(updatedCustomer.getSecondaryPhone());
+        }
+
     }
 }

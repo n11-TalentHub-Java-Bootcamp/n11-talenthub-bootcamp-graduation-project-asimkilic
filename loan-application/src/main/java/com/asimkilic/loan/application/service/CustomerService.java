@@ -1,6 +1,7 @@
 package com.asimkilic.loan.application.service;
 
 import com.asimkilic.loan.application.converter.customer.CustomerConverter;
+import com.asimkilic.loan.application.converter.customer.CustomerMapper;
 import com.asimkilic.loan.application.dto.credit.CreditResultRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
@@ -50,7 +51,10 @@ public class CustomerService {
     @Transactional(propagation = Propagation.REQUIRED)
     public BaseCreditResponse saveNewCustomer(CustomerSaveRequestDto customerSaveRequestDto) {
         Customer newCustomer = INSTANCE.convertToCustomer(customerSaveRequestDto);
-        checkCustomerIsValidForCreation(newCustomer);
+        validateCustomerTurkishRepublicIdNo(newCustomer);
+        checkTurkishRepublicIdNoIsValidForNewCustomer(newCustomer.getTurkishRepublicIdNo());
+        checkEmailAddressIsValidForNewCustomer(newCustomer.getEmail());
+        checkPrimaryPhoneIsValidForNewCustomer(newCustomer.getPrimaryPhone());
         newCustomer.setStatus(EnumCustomerStatus.ACTIVE);
         newCustomer.setCreationTime(getLocalDateTimeNow());
 
@@ -69,13 +73,17 @@ public class CustomerService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerDto updateCustomer(CustomerUpdateRequestDto customerUpdateRequestDto) {
+
+        Customer persistCustomerById = customerEntityService
+                .findById(customerUpdateRequestDto.getId()).orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
         validateUpdateCustomerEmailCredentialNotInUse(customerUpdateRequestDto);
         validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerUpdateRequestDto);
-        Customer customer = INSTANCE.convertToCustomer(customerUpdateRequestDto);
-        // db den nesneyi çek bunları ona aktar sonra kaydet
-        customer.setUpdateTime(getLocalDateTimeNow());
-        customer = customerEntityService.save(customer);
-        return INSTANCE.convertToCustomerDto(customer);
+
+        CustomerConverter.convertUpdatedCustomerToExistCustomer(customerUpdateRequestDto, persistCustomerById);
+
+        persistCustomerById.setUpdateTime(getLocalDateTimeNow());
+        persistCustomerById = customerEntityService.save(persistCustomerById);
+        return INSTANCE.convertToCustomerDto(persistCustomerById);
     }
 
     public CustomerDto findCustomerById(String customerId) {
@@ -111,7 +119,7 @@ public class CustomerService {
         return creditService.findCreditResult(creditResultRequestDto);
     }
 
-    protected void validateUpdateCustomerEmailCredentialNotInUse(final CustomerUpdateRequestDto customerRequestDto){
+    protected void validateUpdateCustomerEmailCredentialNotInUse(final CustomerUpdateRequestDto customerRequestDto) {
         if (customerRequestDto.getEmail() != null) {
             boolean emailInUse = customerEntityService.validateUpdateCustomerEmailCredentialNotInUse(customerRequestDto.getId(), customerRequestDto.getEmail());
             if (emailInUse) {
@@ -119,7 +127,8 @@ public class CustomerService {
             }
         }
     }
-    protected void validateUpdateCustomerPrimaryPhoneCredentialNotInUse(final CustomerUpdateRequestDto customerRequestDto){
+
+    protected void validateUpdateCustomerPrimaryPhoneCredentialNotInUse(final CustomerUpdateRequestDto customerRequestDto) {
         if (customerRequestDto.getPrimaryPhone() != null) {
             boolean phoneInUse = customerEntityService.validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerRequestDto.getId(), customerRequestDto.getPrimaryPhone());
             if (phoneInUse) {
@@ -144,37 +153,7 @@ public class CustomerService {
         return customerEntityService.existsCustomerByPrimaryPhone(primaryPhone);
     }
 
-    private void setDeletingCustomerStatusFalseAndUpdateTimeAndSave(Customer customer) {
-        customer.setStatus(EnumCustomerStatus.DELETED);
-        customer.setUpdateTime(getLocalDateTimeNow());
-        customerEntityService.save(customer);
-    }
-
-    private void checkCustomerIsValidForCreation(final Customer customer) {
-        validateCustomerTurkishRepublicIdNo(customer);
-
-        boolean resultTurkishIdNoIsExist = existsCustomerByTurkishRepublicIdNo(customer.getTurkishRepublicIdNo());
-        if (resultTurkishIdNoIsExist) {
-            throw new TurkishRepublicIdNoIsAlreadySavedException(TURKISH_REPUBLIC_ID_NO_IS_ALREADY_TAKEN);
-        }
-
-        boolean resultEmailIsExist = existsCustomerByEmail(customer.getEmail());
-        if (resultEmailIsExist) {
-            throw new EmailIsAlreadySavedException(EMAIL_IS_ALREADY_SAVED);
-        }
-
-        boolean resultPrimaryPhoneIsExist = existsCustomerByPrimaryPhone(customer.getPrimaryPhone());
-        if (resultPrimaryPhoneIsExist) {
-            throw new PhoneIsAlreadySavedException(PHONE_NUMBER_IS_ALREADY_SAVED);
-        }
-
-    }
-
-    private Optional<Customer> findDeletedCustomerIfExists(String turkishRepublicIdNo) {
-        return customerEntityService.findDeletedCustomerIfExist(turkishRepublicIdNo);
-    }
-
-    private void validateCustomerTurkishRepublicIdNo(final Customer customer) {
+    protected void validateCustomerTurkishRepublicIdNo(final Customer customer) {
         boolean verified = trIdNoVerificationService
                 .verifyTurkishRepublicIdNo(CustomerConverter.convertToVerifyCustomerTurkishRepublicIdNoRequestDto(customer));
 
@@ -182,6 +161,39 @@ public class CustomerService {
             throw new IllegalCustomerUpdateArgumentException(CUSTOMER_CREDENTIALS_ARE_NOT_VALID);
         }
     }
+
+    protected void checkTurkishRepublicIdNoIsValidForNewCustomer(String turkishRepublicIdNo) {
+        boolean resultTurkishIdNoIsExist = existsCustomerByTurkishRepublicIdNo(turkishRepublicIdNo);
+        if (resultTurkishIdNoIsExist) {
+            throw new TurkishRepublicIdNoIsAlreadySavedException(TURKISH_REPUBLIC_ID_NO_IS_ALREADY_TAKEN);
+        }
+    }
+
+    protected void checkEmailAddressIsValidForNewCustomer(String email) {
+        boolean resultEmailIsExist = existsCustomerByEmail(email);
+        if (resultEmailIsExist) {
+            throw new EmailIsAlreadySavedException(EMAIL_IS_ALREADY_SAVED);
+        }
+    }
+
+    protected void checkPrimaryPhoneIsValidForNewCustomer(String primaryPhone) {
+        boolean resultPrimaryPhoneIsExist = existsCustomerByPrimaryPhone(primaryPhone);
+        if (resultPrimaryPhoneIsExist) {
+            throw new PhoneIsAlreadySavedException(PHONE_NUMBER_IS_ALREADY_SAVED);
+        }
+
+    }
+
+    private void setDeletingCustomerStatusFalseAndUpdateTimeAndSave(Customer customer) {
+        customer.setStatus(EnumCustomerStatus.DELETED);
+        customer.setUpdateTime(getLocalDateTimeNow());
+        customerEntityService.save(customer);
+    }
+
+    private Optional<Customer> findDeletedCustomerIfExists(String turkishRepublicIdNo) {
+        return customerEntityService.findDeletedCustomerIfExist(turkishRepublicIdNo);
+    }
+
 
     private LocalDateTime getLocalDateTimeNow() {
         return LocalDateTime.now();

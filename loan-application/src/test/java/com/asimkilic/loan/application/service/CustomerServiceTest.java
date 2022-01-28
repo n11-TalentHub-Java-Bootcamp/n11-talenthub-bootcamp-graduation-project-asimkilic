@@ -6,11 +6,9 @@ import com.asimkilic.loan.application.dto.credit.CreditResultRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
 import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
+import com.asimkilic.loan.application.dto.customer.VerifyCustomerTurkishRepublicIdNoRequestDto;
 import com.asimkilic.loan.application.entity.Customer;
-import com.asimkilic.loan.application.exception.customer.CustomerNotFoundException;
-import com.asimkilic.loan.application.exception.customer.EmailIsAlreadySavedException;
-import com.asimkilic.loan.application.exception.customer.IllegalCustomerUpdateArgumentException;
-import com.asimkilic.loan.application.exception.customer.PhoneIsAlreadySavedException;
+import com.asimkilic.loan.application.exception.customer.*;
 import com.asimkilic.loan.application.gen.entity.BaseCreditResponse;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
 import com.asimkilic.loan.application.gen.service.turkishrepublicidno.BaseTurkishRepublicIdNoVerificationService;
@@ -22,6 +20,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Clock;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 
@@ -44,8 +45,6 @@ class CustomerServiceTest extends TestSupport {
     private BaseTurkishRepublicIdNoVerificationService trIdNoVerificationService;
     @Mock
     private CreditService creditService;
-
-
 
 
     @Test
@@ -236,11 +235,63 @@ class CustomerServiceTest extends TestSupport {
     }
 
     @Test
-    void saveNewCustomer() {
+    void testUpdateCustomer_whenCustomerIdDoesNotExist_shouldThrowCustomerNotFoundException() {
+        CustomerUpdateRequestDto updateRequestDto = getFirstCustomerUpdateRequestDto();
+        when(customerEntityService.findById(updateRequestDto.getId())).thenReturn(Optional.empty());
+        CustomerNotFoundException ex = assertThrows(CustomerNotFoundException.class, () -> customerService.updateCustomer(updateRequestDto));
+        assertEquals(CUSTOMER_NOT_FOUND, ex.getMessage());
     }
 
     @Test
-    void updateCustomer() {
+    void testUpdateCustomer_whenCustomerIdExist_shouldUpdateUser() {
+        CustomerUpdateRequestDto updateRequestDto = getFirstCustomerUpdateRequestDto();
+        Customer customer = getFirstCustomer();
+        when(customerEntityService.findById(updateRequestDto.getId())).thenReturn(Optional.of(customer));
+        when(customerEntityService.save(customer)).thenReturn(customer);
+
+        CustomerDto customerDto = customerService.updateCustomer(updateRequestDto);
+
+        verify(customerEntityService, times(1)).save(customer);
+        assertEquals(customerDto.getUpdateTime().toLocalDate(), LocalDate.now());
+        assertEquals(customerDto.getUpdateTime().toLocalTime().getMinute(), LocalTime.now().getMinute());
+        assertEquals(customerDto.getId(), updateRequestDto.getId());
+    }
+
+    @Test
+    void testValidateCustomerTurkishRepublicIdNo_whenCustomerTurkishRepublicIdNoNotVerified_shouldThrowIllegalCustomerUpdateArgumentException() {
+        Customer customer = getFirstCustomer();
+        VerifyCustomerTurkishRepublicIdNoRequestDto verifyDto = getFirstCustomerVerifyTurkishRepublicIdNoRequestDto();
+        when(trIdNoVerificationService.verifyTurkishRepublicIdNo(verifyDto)).thenReturn(Boolean.FALSE);
+        IllegalCustomerUpdateArgumentException ex = assertThrows(IllegalCustomerUpdateArgumentException.class, () -> customerService.validateCustomerTurkishRepublicIdNo(customer));
+        assertEquals(CUSTOMER_CREDENTIALS_ARE_NOT_VALID, ex.getMessage());
+    }
+
+    @Test
+    void testCheckTurkishRepublicIdNoIsValidForNewCustomer_whenTurkishRepublicIdNoAlreadySaved_shouldThrowTurkishRepublicIdNoIsAlreadySavedException() {
+        String turkishRepublicIdNo = "10020030040";
+        when(customerEntityService.existsCustomerByTurkishRepublicIdNo(turkishRepublicIdNo)).thenReturn(Boolean.TRUE);
+        TurkishRepublicIdNoIsAlreadySavedException ex = assertThrows(TurkishRepublicIdNoIsAlreadySavedException.class, () -> customerService.checkTurkishRepublicIdNoIsValidForNewCustomer(turkishRepublicIdNo));
+        assertEquals(TURKISH_REPUBLIC_ID_NO_IS_ALREADY_TAKEN, ex.getMessage());
+    }
+
+    @Test
+    void testCheckEmailAddressIsValidForNewCustomer_whenEmailAddressIsAlreadySaved_shouldThrowEmailIsAlreadySavedException() {
+        String email = "customer-1@customer.com";
+        when(customerEntityService.existsCustomerByEmail(email)).thenReturn(Boolean.TRUE);
+        EmailIsAlreadySavedException ex = assertThrows(EmailIsAlreadySavedException.class, () -> customerService.checkEmailAddressIsValidForNewCustomer(email));
+        assertEquals(EMAIL_IS_ALREADY_SAVED, ex.getMessage());
+    }
+
+    @Test
+    void testCheckPrimaryPhoneIsValidForNewCustomer_whenPrimaryPhoneIsAlreadySaved_shouldThrowPhoneIsAlreadySavedException() {
+        String primaryPhone = "5329998877";
+        when(customerEntityService.existsCustomerByPrimaryPhone(primaryPhone)).thenReturn(Boolean.TRUE);
+        PhoneIsAlreadySavedException ex = assertThrows(PhoneIsAlreadySavedException.class, () -> customerService.checkPrimaryPhoneIsValidForNewCustomer(primaryPhone));
+        assertEquals(PHONE_NUMBER_IS_ALREADY_SAVED, ex.getMessage());
+    }
+
+    @Test
+    void saveNewCustomer() {
     }
 
 
