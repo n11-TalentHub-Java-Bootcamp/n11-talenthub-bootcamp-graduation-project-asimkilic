@@ -85,7 +85,7 @@ class CreditServiceTest extends TestSupport {
 
     @Test
     void testFindCreditResult_whenCreditDoesNotExist_shouldThrowCreditNotFoundException() {
-        CreditResultRequestDto creditResultRequestDto = getFirstCustomerCreditRequestDto();
+        CreditResultRequestDto creditResultRequestDto = getFirstCustomerCreditResultRequestDto();
         when(creditEntityService.findCreditResultByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo())).thenReturn(Optional.empty());
         CreditNotFoundException ex = assertThrows(CreditNotFoundException.class, () -> creditService.findCreditResult(creditResultRequestDto));
         assertEquals(CREDIT_NOT_FOUND, ex.getMessage());
@@ -93,7 +93,7 @@ class CreditServiceTest extends TestSupport {
 
     @Test
     void testFindCreditResult_whenCreditExistAndApproved_shouldReturnBaseCreditResponseWithApproved() {
-        CreditResultRequestDto creditResultRequestDto = getFirstCustomerCreditRequestDto();
+        CreditResultRequestDto creditResultRequestDto = getFirstCustomerCreditResultRequestDto();
         Credit credit = getFirstCustomerApprovedCredit();
         when(creditEntityService.findCreditResultByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo())).thenReturn(Optional.of(credit));
         BaseCreditResponse creditResult = creditService.findCreditResult(creditResultRequestDto);
@@ -103,7 +103,7 @@ class CreditServiceTest extends TestSupport {
 
     @Test
     void testFindCreditResult_whenCreditExistAndDenied_shouldReturnBaseCreditResponseWithDenied() {
-        CreditResultRequestDto creditResultRequestDto = getFirstCustomerCreditRequestDto();
+        CreditResultRequestDto creditResultRequestDto = getFirstCustomerCreditResultRequestDto();
         Credit credit = getFirstCustomerDeniedCredit();
         when(creditEntityService.findCreditResultByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo())).thenReturn(Optional.of(credit));
         BaseCreditResponse creditResult = creditService.findCreditResult(creditResultRequestDto);

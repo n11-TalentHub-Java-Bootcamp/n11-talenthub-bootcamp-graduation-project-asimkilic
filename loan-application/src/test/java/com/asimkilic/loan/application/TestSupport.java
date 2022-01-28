@@ -61,7 +61,7 @@ public class TestSupport {
         return updateRequestDto;
     }
 
-    public CreditResultRequestDto getFirstCustomerCreditRequestDto() {
+    public CreditResultRequestDto getFirstCustomerCreditResultRequestDto() {
         CreditResultRequestDto requestDto = CreditResultRequestDto.builder()
                 .turkishRepublicIdNo("10020030040")
                 .dateOfBirth(new Date(1991, Calendar.JANUARY, 1))
@@ -69,12 +69,23 @@ public class TestSupport {
         return requestDto;
     }
 
-    public CreditResultRequestDto getSecondCustomerCreditRequestDto() {
+    public CreditResultRequestDto getSecondCustomerCreditResultRequestDto() {
         CreditResultRequestDto requestDto = CreditResultRequestDto.builder()
                 .turkishRepublicIdNo("20020030040")
                 .dateOfBirth(new Date(1992, 2, 2))
                 .build();
         return requestDto;
+    }
+
+    public VerifyCustomerTurkishRepublicIdNoRequestDto getFirstCustomerVerifyCustomerTurkishRepublicIdNoRequestDto() {
+        VerifyCustomerTurkishRepublicIdNoRequestDto verifyDto = VerifyCustomerTurkishRepublicIdNoRequestDto
+                .builder()
+                .turkishRepublicIdentityNo("13390212304")
+                .firstName("Abdullah Asım")
+                .lastName("KILIÇ")
+                .yearOfBirth("1991")
+                .build();
+        return verifyDto;
     }
 
     public CreditResultRequestDto getFirstCustomerCreditResultDto() {
@@ -100,6 +111,7 @@ public class TestSupport {
                 .build();
         return credit;
     }
+
     public Credit getFirstCustomerDeniedCredit() {
         Credit credit = Credit.builder()
                 .id("Credit-1")
@@ -139,6 +151,20 @@ public class TestSupport {
                 .turkishRepublicIdentityNo(customer.getTurkishRepublicIdNo()).build();
 
         return dto;
+    }
+
+    public CustomerSaveRequestDto getCustomerSaveRequestDto() {
+        CustomerSaveRequestDto customerSaveRequestDto = CustomerSaveRequestDto.builder()
+                .turkishRepublicIdNo("13390212304")
+                .firstName("Abdullah Asım")
+                .lastName("KILIÇ")
+                .email("asimkilic06@yahoo.com")
+                .amountOfGuarantee(BigDecimal.valueOf(5000))
+                .monthlySalary(BigDecimal.valueOf(12000))
+                .primaryPhone("5432761691")
+                .dateOfBirth(new Date(1991, Calendar.APRIL, 19))
+                .build();
+        return customerSaveRequestDto;
     }
 
     public List<Customer> getAllCustomer() {

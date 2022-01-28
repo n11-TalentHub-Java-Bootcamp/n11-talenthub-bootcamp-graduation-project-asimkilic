@@ -27,7 +27,7 @@ import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
 
 @Service
 @RequiredArgsConstructor
-class CreditService {
+public class CreditService {
     private final CreditEntityService creditEntityService;
     private final Clock clock;
     private final BaseCreditScoreInquiryService creditScoreService;

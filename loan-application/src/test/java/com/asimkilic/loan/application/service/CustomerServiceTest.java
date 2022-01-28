@@ -205,7 +205,7 @@ class CustomerServiceTest extends TestSupport {
     @Test
     void testFindCreditResult_whenCreditResultRequestDtoDateOfBirthDoesNotMatchCustomerDateOfBirth_shouldThrowIllegalCustomerUpdateArgumentException() {
         Customer customer = getFirstCustomer();
-        CreditResultRequestDto creditResultRequestDto = getSecondCustomerCreditRequestDto();
+        CreditResultRequestDto creditResultRequestDto = getSecondCustomerCreditResultRequestDto();
         when(customerEntityService.findCustomerByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo())).thenReturn(Optional.of(customer));
         IllegalCustomerUpdateArgumentException ex = assertThrows(IllegalCustomerUpdateArgumentException.class, () -> customerService.findCreditResult(creditResultRequestDto));
         assertEquals(CUSTOMER_ARGUMENTS_INVALID, ex.getMessage());
@@ -215,7 +215,7 @@ class CustomerServiceTest extends TestSupport {
     @Test
     void testFindCreditResult_whenCreditResultRequestDtoDateOfBirthDoesMatchCustomerDateOfBirth_shouldReturnBaseCreditResponse() {
         Customer customer = getFirstCustomer();
-        CreditResultRequestDto creditResultRequestDto = getFirstCustomerCreditRequestDto();
+        CreditResultRequestDto creditResultRequestDto = getFirstCustomerCreditResultRequestDto();
 
 
         when(customerEntityService.findCustomerByTurkishRepublicIdNo(creditResultRequestDto.getTurkishRepublicIdNo())).thenReturn(Optional.of(customer));
