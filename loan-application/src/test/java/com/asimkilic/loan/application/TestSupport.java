@@ -1,8 +1,10 @@
 package com.asimkilic.loan.application;
 
+import com.asimkilic.loan.application.dto.credit.CreditCalculationRequestDto;
 import com.asimkilic.loan.application.dto.credit.CreditResultRequestDto;
 import com.asimkilic.loan.application.dto.customer.*;
 import com.asimkilic.loan.application.entity.Credit;
+import com.asimkilic.loan.application.entity.CreditConstraint;
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.gen.entity.BaseCreditResponse;
 import com.asimkilic.loan.application.gen.enums.EnumCreditStatus;
@@ -73,6 +75,58 @@ public class TestSupport {
                 .dateOfBirth(new Date(1992, 2, 2))
                 .build();
         return requestDto;
+    }
+
+    public CreditResultRequestDto getFirstCustomerCreditResultDto() {
+        CreditResultRequestDto creditResultRequestDto = CreditResultRequestDto.builder()
+                .turkishRepublicIdNo("10020030040")
+                .dateOfBirth(new Date(1991, Calendar.JANUARY, 1))
+                .build();
+        return creditResultRequestDto;
+
+    }
+
+    public Credit getFirstCustomerApprovedCredit() {
+        Credit credit = Credit.builder()
+                .id("Credit-1")
+                .customer(getFirstCustomer())
+                .creditConstraint(getFirstCustomerCreditConstraint())
+                .creditLimit(BigDecimal.valueOf(10200))
+                .creationTime(getLocalDateTime())
+                .salaryAtTheTimeOfApplication(getFirstCustomer().getMonthlySalary())
+                .amountOfGuaranteeAtTheTimeOfApplication((getFirstCustomer().getAmountOfGuarantee()))
+                .creditScoreAtTheTimeOfApplication(BigDecimal.valueOf(1500))
+                .creditStatus(EnumCreditStatus.APPROVED)
+                .build();
+        return credit;
+    }
+    public Credit getFirstCustomerDeniedCredit() {
+        Credit credit = Credit.builder()
+                .id("Credit-1")
+                .customer(getFirstCustomer())
+                .creditConstraint(null)
+                .creditLimit(null)
+                .creationTime(getLocalDateTime())
+                .salaryAtTheTimeOfApplication(getFirstCustomer().getMonthlySalary())
+                .amountOfGuaranteeAtTheTimeOfApplication((getFirstCustomer().getAmountOfGuarantee()))
+                .creditScoreAtTheTimeOfApplication(BigDecimal.valueOf(1500))
+                .creditStatus(EnumCreditStatus.DENIED)
+                .build();
+        return credit;
+    }
+
+    public CreditConstraint getFirstCustomerCreditConstraint() {
+        CreditConstraint creditConstraint = CreditConstraint.builder()
+                .id("credit-constraint-1")
+                .creditLimit(BigDecimal.valueOf(10000))
+                .percentageOfGuarantee(BigDecimal.valueOf(10))
+                .creditLimitMultiplierCoefficient(BigDecimal.ZERO)
+                .creditScoreLowerLimit(BigDecimal.valueOf(500))
+                .creditScoreLowerLimit(BigDecimal.valueOf(1000))
+                .salaryLowerLimit(BigDecimal.valueOf(0))
+                .salaryUpperLimit(BigDecimal.valueOf(5000))
+                .build();
+        return creditConstraint;
     }
 
 
@@ -189,10 +243,23 @@ public class TestSupport {
         return LocalDateTime.ofInstant(getCurrentInstant(), Clock.systemDefaultZone().getZone());
     }
 
-    public BaseCreditResponse getFirstCustomerApprovedCreditResponse(){
+    public BaseCreditResponse getFirstCustomerApprovedCreditResponse() {
         return () -> EnumCreditStatus.APPROVED;
     }
-    public BaseCreditResponse getFirstCustomerDeniedCreditResponse(){
+
+    public BaseCreditResponse getFirstCustomerDeniedCreditResponse() {
         return () -> EnumCreditStatus.DENIED;
+    }
+
+    public CreditCalculationRequestDto getFirstCustomerCreditCalculationRequestDto() {
+        CreditCalculationRequestDto creditCalculationRequestDto = CreditCalculationRequestDto
+                .builder()
+                .clientSalary(BigDecimal.valueOf(5000))
+                .clientAmountOfGuarantee(BigDecimal.valueOf(1000))
+                .creditLimit(BigDecimal.valueOf(10000))
+                .percentageOfGuarantee(BigDecimal.valueOf(10))
+                .creditLimitMultiplierCoefficient(BigDecimal.ZERO)
+                .build();
+        return creditCalculationRequestDto;
     }
 }

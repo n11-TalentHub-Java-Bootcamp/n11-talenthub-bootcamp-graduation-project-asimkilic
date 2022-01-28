@@ -37,8 +37,9 @@ class CreditService {
     public BaseCreditResponse applyCredit(CustomerDto customerDto) {
         CreditScoreInquiryRequestDto creditScoreInquiryRequestDto = INSTANCE.convertToCreditScoreInquiryRequestDto(customerDto.getTurkishRepublicIdNo());
         BigDecimal creditScore = creditScoreService.findCreditScore(creditScoreInquiryRequestDto);
-        boolean isCustomerSuitable = checkIsCustomerSuitableToCreditIfNotSaveIt(customerDto, creditScore);
-        if (!isCustomerSuitable) {
+        boolean hasCredit = doesCustomerHaveApprovedCreditByTurkishRepublicIdNo(customerDto.getTurkishRepublicIdNo());
+        if (hasCredit || creditScore.compareTo(BigDecimal.valueOf(500)) < 0) {
+            saveDeniedCreditApplicationAndSendSms(customerDto, creditScore);
             return new DeniedCreditResponse();
         }
         CreditConstraint suitableCreditConstraint = creditEntityService.findSuitableCreditConstraint(customerDto.getMonthlySalary(), creditScore);
@@ -53,16 +54,13 @@ class CreditService {
         return new ApprovedCreditResponse(calculateTotalCreditBalance);
     }
 
-    private boolean checkIsCustomerSuitableToCreditIfNotSaveIt(CustomerDto customerDto, BigDecimal creditScore) {
-        boolean hasCredit = doesCustomerHaveApprovedCreditByTurkishRepublicIdNo(customerDto.getTurkishRepublicIdNo());
-        if (hasCredit || creditScore.compareTo(BigDecimal.valueOf(500)) < 0) {
-            Credit credit = INSTANCE.convertToCreditForDenied(customerDto, EnumCreditStatus.DENIED, creditScore);
-            credit.setCreationTime(getLocalDateTimeNow());
-            creditEntityService.save(credit);
-            smsHandler.sendSms(customerDto.getPrimaryPhone(), CREDIT_APPLICATION_IS_DENIED, ThreadContext.get("requestid"));
-            return false;
-        }
-        return true;
+
+    private void saveDeniedCreditApplicationAndSendSms(CustomerDto customerDto, BigDecimal creditScore) {
+        Credit credit = INSTANCE.convertToCreditForDenied(customerDto, EnumCreditStatus.DENIED, creditScore);
+        credit.setCreationTime(getLocalDateTimeNow());
+        creditEntityService.save(credit);
+        smsHandler.sendSms(customerDto.getPrimaryPhone(), CREDIT_APPLICATION_IS_DENIED, ThreadContext.get("requestid"));
+
     }
 
     public BaseCreditResponse findCreditResult(CreditResultRequestDto creditResultRequestDto) {
@@ -80,8 +78,9 @@ class CreditService {
     }
 
     private LocalDateTime getLocalDateTimeNow() {
-        Instant instant = clock.instant();
-        return LocalDateTime.ofInstant(instant, Clock.systemDefaultZone().getZone());
+        //Instant instant = clock.instant();
+        //return LocalDateTime.ofInstant(instant, Clock.systemDefaultZone().getZone());
+        return LocalDateTime.now();
     }
 
 

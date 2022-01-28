@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @ToString
 @NoArgsConstructor
 @Builder
-public class CreditConstraint implements Serializable, BaseEntity {
+public class  CreditConstraint implements Serializable, BaseEntity {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
