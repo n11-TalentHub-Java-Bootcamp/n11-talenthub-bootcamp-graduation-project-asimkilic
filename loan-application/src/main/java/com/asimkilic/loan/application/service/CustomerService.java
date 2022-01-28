@@ -1,7 +1,6 @@
 package com.asimkilic.loan.application.service;
 
 import com.asimkilic.loan.application.converter.customer.CustomerConverter;
-import com.asimkilic.loan.application.converter.customer.CustomerMapper;
 import com.asimkilic.loan.application.dto.credit.CreditResultRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
 import com.asimkilic.loan.application.dto.customer.CustomerDto;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +34,6 @@ public class CustomerService {
     private final BaseTurkishRepublicIdNoVerificationService trIdNoVerificationService;
     private final CreditService creditService;
 
-    private final Clock clock;
 
 
     public List<CustomerDto> findAllUsers() {
@@ -52,17 +49,24 @@ public class CustomerService {
     public BaseCreditResponse saveNewCustomer(CustomerSaveRequestDto customerSaveRequestDto) {
         Customer newCustomer = INSTANCE.convertToCustomer(customerSaveRequestDto);
         validateCustomerTurkishRepublicIdNo(newCustomer);
-        checkTurkishRepublicIdNoIsValidForNewCustomer(newCustomer.getTurkishRepublicIdNo());
-        checkEmailAddressIsValidForNewCustomer(newCustomer.getEmail());
-        checkPrimaryPhoneIsValidForNewCustomer(newCustomer.getPrimaryPhone());
-        newCustomer.setStatus(EnumCustomerStatus.ACTIVE);
-        newCustomer.setCreationTime(getLocalDateTimeNow());
+
 
         Optional<Customer> deletedCustomer = findDeletedCustomerIfExists(newCustomer.getTurkishRepublicIdNo());
         if (deletedCustomer.isPresent()) {
+            CustomerUpdateRequestDto updateRequestDto = CustomerUpdateRequestDto.builder().id(deletedCustomer.get().getId()).email(deletedCustomer.get().getEmail()).primaryPhone(deletedCustomer.get().getPrimaryPhone()).build();
+            validateUpdateCustomerEmailCredentialNotInUse(updateRequestDto);
+            validateUpdateCustomerPrimaryPhoneCredentialNotInUse(updateRequestDto);
             newCustomer = CustomerConverter.convertDeletedCustomerToNewCustomer(newCustomer, deletedCustomer.get());
             newCustomer.setUpdateTime(getLocalDateTimeNow());
+        } else {
+
+            newCustomer.setStatus(EnumCustomerStatus.ACTIVE);
+            newCustomer.setCreationTime(getLocalDateTimeNow());
+            checkTurkishRepublicIdNoIsValidForNewCustomer(newCustomer.getTurkishRepublicIdNo());
+            checkEmailAddressIsValidForNewCustomer(newCustomer.getEmail());
+            checkPrimaryPhoneIsValidForNewCustomer(newCustomer.getPrimaryPhone());
         }
+
         newCustomer = customerEntityService.save(newCustomer);
         CustomerDto customerDto = INSTANCE.convertToCustomerDto(newCustomer);
 
@@ -193,7 +197,6 @@ public class CustomerService {
     private Optional<Customer> findDeletedCustomerIfExists(String turkishRepublicIdNo) {
         return customerEntityService.findDeletedCustomerIfExist(turkishRepublicIdNo);
     }
-
 
     private LocalDateTime getLocalDateTimeNow() {
         return LocalDateTime.now();

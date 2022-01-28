@@ -3,10 +3,7 @@ package com.asimkilic.loan.application.service;
 import com.asimkilic.loan.application.TestSupport;
 import com.asimkilic.loan.application.dto.credit.ApprovedCreditResponse;
 import com.asimkilic.loan.application.dto.credit.CreditResultRequestDto;
-import com.asimkilic.loan.application.dto.customer.CustomerDeleteRequestDto;
-import com.asimkilic.loan.application.dto.customer.CustomerDto;
-import com.asimkilic.loan.application.dto.customer.CustomerUpdateRequestDto;
-import com.asimkilic.loan.application.dto.customer.VerifyCustomerTurkishRepublicIdNoRequestDto;
+import com.asimkilic.loan.application.dto.customer.*;
 import com.asimkilic.loan.application.entity.Customer;
 import com.asimkilic.loan.application.exception.customer.*;
 import com.asimkilic.loan.application.gen.entity.BaseCreditResponse;
@@ -19,15 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Clock;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
 
-import static com.asimkilic.loan.application.gen.enums.EnumCreditStatus.APPROVED;
-import static com.asimkilic.loan.application.gen.enums.EnumCreditStatus.DENIED;
+import static com.asimkilic.loan.application.gen.enums.EnumCreditStatus.*;
 import static com.asimkilic.loan.application.gen.message.InfoMessage.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -131,7 +125,7 @@ class CustomerServiceTest extends TestSupport {
     }
 
     @Test
-    void testExistCustomerByPrimaryPhone_whenCustomerPrimaryPhoneExist_shouldReturnTrue() {
+    void testExistsCustomerByPrimaryPhone_whenCustomerPrimaryPhoneExist_shouldReturnTrue() {
         when(customerEntityService.existsCustomerByPrimaryPhone("5329998877")).thenReturn(true);
         boolean result = customerService.existsCustomerByPrimaryPhone("5329998877");
         assertTrue(result);
@@ -291,7 +285,42 @@ class CustomerServiceTest extends TestSupport {
     }
 
     @Test
-    void saveNewCustomer() {
+    void testSaveNewCustomer_whenDeletedCustomerSavesAgain_shouldDeletedCustomerStatusActiveAndApplyCredit() {
+        CustomerSaveRequestDto customerSaveRequestDto = getFirstCustomerSaveRequestDto();
+        Customer deletedCustomer = getFirstCustomer();
+        deletedCustomer.setStatus(EnumCustomerStatus.DELETED);
+        Customer newCustomer = getFirstCustomer();
+        VerifyCustomerTurkishRepublicIdNoRequestDto customerTurkishRepublicIdNoRequestDto = getFirstCustomerVerifyTurkishRepublicIdNoRequestDto();
+        BaseCreditResponse creditResponse = getFirstCustomerApprovedCreditResponse();
+
+        when(trIdNoVerificationService.verifyTurkishRepublicIdNo(customerTurkishRepublicIdNoRequestDto)).thenReturn(Boolean.TRUE);
+        when(customerEntityService.findDeletedCustomerIfExist(customerSaveRequestDto.getTurkishRepublicIdNo())).thenReturn(Optional.of(deletedCustomer));
+        when(customerEntityService.save(any())).thenReturn(newCustomer);
+        when(creditService.applyCredit(any())).thenReturn(creditResponse);
+
+        BaseCreditResponse creditResponseResult = customerService.saveNewCustomer(customerSaveRequestDto);
+
+        assertEquals(deletedCustomer.getUpdateTime().toLocalTime().getMinute(), LocalTime.now().getMinute());
+        assertEquals(deletedCustomer.getStatus(), EnumCustomerStatus.ACTIVE);
+        assertEquals(creditResponseResult, creditResponseResult);
+    }
+
+    @Test
+    void testSaveNewCustomer_whenNewCustomerSaves_shouldCustomerSavesAndApplyCredit() {
+        CustomerSaveRequestDto customerSaveRequestDto = getFirstCustomerSaveRequestDto();
+        Customer newCustomer = getFirstCustomer();
+        VerifyCustomerTurkishRepublicIdNoRequestDto customerTurkishRepublicIdNoRequestDto = getFirstCustomerVerifyTurkishRepublicIdNoRequestDto();
+        BaseCreditResponse creditResponse = getFirstCustomerDeniedCreditResponse();
+
+        when(trIdNoVerificationService.verifyTurkishRepublicIdNo(customerTurkishRepublicIdNoRequestDto)).thenReturn(Boolean.TRUE);
+        when(customerEntityService.findDeletedCustomerIfExist(customerSaveRequestDto.getTurkishRepublicIdNo())).thenReturn(Optional.empty());
+        when(customerEntityService.save(any())).thenReturn(newCustomer);
+        when(creditService.applyCredit(any())).thenReturn(creditResponse);
+
+        BaseCreditResponse creditResponseResult = customerService.saveNewCustomer(customerSaveRequestDto);
+
+        assertNull(newCustomer.getUpdateTime());
+        assertEquals(creditResponseResult, creditResponseResult);
     }
 
 

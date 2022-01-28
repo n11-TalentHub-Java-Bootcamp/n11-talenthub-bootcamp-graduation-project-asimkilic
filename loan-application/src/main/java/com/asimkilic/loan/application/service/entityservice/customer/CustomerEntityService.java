@@ -54,9 +54,6 @@ public class CustomerEntityService extends BaseEntityService<Customer, CustomerR
         return getRepository().validateUpdateCustomerPrimaryPhoneCredentialNotInUse(customerId, primaryPhone);
     }
 
- /*   public boolean validateNewCustomerCredentialsNotInUse(String turkishRepublicIdNo, String email, String primaryPhone) {
-        return getRepository().validateNewCustomerCredentialsNotInUse(turkishRepublicIdNo, email, primaryPhone);
-    }*/
 
     public Optional<Customer> findDeletedCustomerIfExist(String turkishRepublicIdNo) {
         return getRepository().findCustomerByTurkishRepublicIdNoAndStatus(turkishRepublicIdNo, EnumCustomerStatus.DELETED);

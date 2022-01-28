@@ -4,6 +4,8 @@ import com.asimkilic.loan.application.dto.credit.CreditResultRequestDto;
 import com.asimkilic.loan.application.dto.customer.*;
 import com.asimkilic.loan.application.entity.Credit;
 import com.asimkilic.loan.application.entity.Customer;
+import com.asimkilic.loan.application.gen.entity.BaseCreditResponse;
+import com.asimkilic.loan.application.gen.enums.EnumCreditStatus;
 import com.asimkilic.loan.application.gen.enums.EnumCustomerStatus;
 
 import java.math.BigDecimal;
@@ -72,6 +74,7 @@ public class TestSupport {
                 .build();
         return requestDto;
     }
+
 
     public VerifyCustomerTurkishRepublicIdNoRequestDto getFirstCustomerVerifyTurkishRepublicIdNoRequestDto() {
         Customer customer = getFirstCustomer();
@@ -186,4 +189,10 @@ public class TestSupport {
         return LocalDateTime.ofInstant(getCurrentInstant(), Clock.systemDefaultZone().getZone());
     }
 
+    public BaseCreditResponse getFirstCustomerApprovedCreditResponse(){
+        return () -> EnumCreditStatus.APPROVED;
+    }
+    public BaseCreditResponse getFirstCustomerDeniedCreditResponse(){
+        return () -> EnumCreditStatus.DENIED;
+    }
 }
