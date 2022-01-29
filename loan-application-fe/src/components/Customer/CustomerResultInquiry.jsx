@@ -1,9 +1,40 @@
 import React from "react";
 import styled from "styled-components";
 import { Arrow90degRight } from "styled-icons/bootstrap";
+import { Axios, AxiosPost, AxiosGet } from "../../utilites/Axios";
 import BotImage from "../assets/Bot.png";
+//import axios from "axios";
 
 const CustomerResultInquiry = () => {
+  const [trId, setTrId] = React.useState("");
+  const [dateOfBirth, setDateOfBirth] = React.useState("");
+  const [modal, setModalState] = React.useState(false);
+  const [data, setData] = React.useState({
+    message: "Data yüklendi",
+    status: false,
+  });
+  const customerHandler = () => {
+    if (trId === "" || dateOfBirth === "") {
+      window.alert("boş bırama ");
+    }
+    AxiosPost("/credit", {
+      turkishRepublicIdNo: trId,
+      dateOfBirth: dateOfBirth,
+    })
+      .then((res) => {
+        console.log(res.data);
+        window.alert(res.data.response);
+
+        creditResponseHandler();
+      })
+      .catch((err) => console.log(err.response))
+      .finally(setTrId(""), setDateOfBirth(""));
+  };
+  const creditResponseHandler = () => {
+    AxiosGet("/").then((res) => {
+      console.log(res.data);
+    });
+  };
   return (
     <PaddingBox>
       <div style={{ flex: 1 }}>
@@ -13,10 +44,25 @@ const CustomerResultInquiry = () => {
           <Arrow90degRight />
         </pre>
         <CustomInput>
-          <input type="text" placeholder="TCKN giriniz" />
-          {/* <input type="text" placeholder="Doğum tarihi giriniz (yyyy-mm-dd)" /> */}
+          <input
+            onChange={(e) => {
+              setTrId(e.currentTarget.value);
+            }}
+            type="text"
+            value={trId}
+            placeholder="Türkiye Cumhuriyeti Kimlik Numaranız"
+          />
         </CustomInput>
-        <Button>
+        <CustomInput>
+          <input
+            onChange={(e) => {
+              setDateOfBirth(e.currentTarget.value);
+            }}
+            type="text"
+            placeholder="Doğum Tarihiniz (1990-01-29)"
+          />
+        </CustomInput>
+        <Button onClick={customerHandler}>
           <span>Sorgula</span>
         </Button>
       </div>
@@ -58,6 +104,7 @@ const Button = styled.button`
 const CustomInput = styled.div`
   background: white;
   padding: 20px 20px;
+  margin-bottom: 20px;
   width: 400px;
   border-radius: 180px;
   input {
