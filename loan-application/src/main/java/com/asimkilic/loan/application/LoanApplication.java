@@ -1,8 +1,6 @@
 package com.asimkilic.loan.application;
 
 import com.creditscoreinquiry.CreditScoreInquiryService;
-import com.asimkilic.loan.application.twilio.configuration.TwilioConfiguration;
-import com.squareup.okhttp.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +14,7 @@ import java.time.Clock;
 @EnableAsync
 public class LoanApplication {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         SpringApplication.run(LoanApplication.class, args);
 
     }

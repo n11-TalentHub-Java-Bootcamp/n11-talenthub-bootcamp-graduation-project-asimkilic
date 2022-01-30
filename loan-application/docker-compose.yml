@@ -11,14 +11,6 @@ services:
     environment:
       POSTGRES_PASSWORD: 12345
 
-
-  mongo:
-    image: mongo
-    ports:
-      - '27017:27017'
-
-
-
   adminer:
     image: adminer
     restart: always
