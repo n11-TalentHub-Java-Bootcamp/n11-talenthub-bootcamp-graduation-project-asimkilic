@@ -188,9 +188,12 @@ Project Link: [https://github.com/n11-TalentHub-Java-Bootcamp/n11-talenthub-boot
 
 ## Previews
 
+![Anasayfa](https://github.com/n11-TalentHub-Java-Bootcamp/n11-talenthub-bootcamp-graduation-project-asimkilic/blob/main/assets/1.png)
 
-* 
+![Mobil Müşteri Silme](https://github.com/n11-TalentHub-Java-Bootcamp/n11-talenthub-bootcamp-graduation-project-asimkilic/blob/main/assets/2.png)
 
-  
+![Desktop Müşteri silme](https://github.com/n11-TalentHub-Java-Bootcamp/n11-talenthub-bootcamp-graduation-project-asimkilic/blob/main/assets/3.png)
+
+![Mobile Anasayfa](https://github.com/n11-TalentHub-Java-Bootcamp/n11-talenthub-bootcamp-graduation-project-asimkilic/blob/main/assets/4.png)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
