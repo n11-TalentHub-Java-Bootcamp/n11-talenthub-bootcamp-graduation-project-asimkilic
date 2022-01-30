@@ -323,5 +323,27 @@ class CustomerServiceTest extends TestSupport {
         assertEquals(creditResponseResult, creditResponseResult);
     }
 
+    @Test
+    void testApplyCreditByTurkishRepublicIdNo_whenTurkishRepublicIdDoesNotExist_shouldThrowCustomerNotFoundException() {
+
+        String turkishRepublicIdNo = "10020030040";
+        when(customerEntityService.findCustomerByTurkishRepublicIdNo(turkishRepublicIdNo)).thenReturn(Optional.empty());
+        CustomerNotFoundException ex = assertThrows(CustomerNotFoundException.class, () -> customerService.applyCreditByTurkishRepublicIdNo(turkishRepublicIdNo));
+        assertEquals(CUSTOMER_NOT_FOUND, ex.getMessage());
+    }
+
+    @Test
+    void testApplyCreditByTurkishRepublicIdNo_whenTurkishRepublicIdNoExists_shouldReturnBaseCreditResponse() {
+
+        String turkishRepublicIdNo = "10020030040";
+        Customer customer = getFirstCustomer();
+        ApprovedCreditResponse app = new ApprovedCreditResponse();
+        when(customerEntityService.findCustomerByTurkishRepublicIdNo(turkishRepublicIdNo)).thenReturn(Optional.of(customer));
+        when(creditService.applyCredit(any())).thenReturn(app);
+        BaseCreditResponse creditResult = customerService.applyCreditByTurkishRepublicIdNo(turkishRepublicIdNo);
+
+        verify(creditService, times(1)).applyCredit(any());
+        assertTrue(creditResult.getResponse() == DENIED || creditResult.getResponse() == APPROVED);
+    }
 
 }

@@ -35,7 +35,6 @@ public class CustomerService {
     private final CreditService creditService;
 
 
-
     public List<CustomerDto> findAllUsers() {
         return customerEntityService
                 .findAllActiveCustomers()
@@ -43,6 +42,17 @@ public class CustomerService {
                 .map(INSTANCE::convertToCustomerDto)
                 .collect(Collectors.toList());
 
+    }
+
+    @Transactional(propagation=Propagation.SUPPORTS)
+    public BaseCreditResponse applyCreditByTurkishRepublicIdNo(String turkishRepublicIdNo) {
+        Customer customer = customerEntityService
+                .findCustomerByTurkishRepublicIdNo(turkishRepublicIdNo)
+                .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
+        CustomerDto customerDto = INSTANCE.convertToCustomerDto(customer);
+
+        BaseCreditResponse baseCreditResponse = creditService.applyCredit(customerDto);
+        return baseCreditResponse;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

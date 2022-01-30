@@ -95,4 +95,10 @@ class CustomerControllerTest extends TestSupport {
         assertEquals(HttpStatus.valueOf(200), creditResult.getStatusCode());
         verify(customerService, times(1)).findCreditResult(creditResultRequestDto);
     }
+    @Test
+    void testApplyCreditByTurkishRepublicIdNo_shouldReturnCreditResult(){
+        ResponseEntity<BaseCreditResponse> baseCreditResponseResponseEntity = customerController.applyCreditByTurkishRepublicIdNo("10020030040");
+        assertEquals(HttpStatus.valueOf(200), baseCreditResponseResponseEntity.getStatusCode());
+        verify(customerService, times(1)).applyCreditByTurkishRepublicIdNo("10020030040");
+    }
 }

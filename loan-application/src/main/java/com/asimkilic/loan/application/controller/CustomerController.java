@@ -35,8 +35,8 @@ public class CustomerController {
     @PostMapping
     @Operation(summary = "Saves new customer")
     public ResponseEntity<BaseCreditResponse> saveNewCustomer(@RequestBody @Valid CustomerSaveRequestDto customerSaveRequestDto) {
-        BaseCreditResponse newCustomer = customerService.saveNewCustomer(customerSaveRequestDto);
-        return ResponseEntity.ok(newCustomer);
+        BaseCreditResponse creditResponse = customerService.saveNewCustomer(customerSaveRequestDto);
+        return ResponseEntity.ok(creditResponse);
     }
 
     @PutMapping
@@ -73,6 +73,11 @@ public class CustomerController {
         BaseCreditResponse response = customerService.findCreditResult(creditResultRequestDto);
         return ResponseEntity.ok(response);
     }
-    //TODO apply credit by tckn
+    @GetMapping("/apply/{trid}")
+    @Operation(summary = "Applies to credit by Turkish Republic Id No")
+    ResponseEntity<BaseCreditResponse> applyCreditByTurkishRepublicIdNo(@PathVariable String trid) {
+        BaseCreditResponse creditResponse = customerService.applyCreditByTurkishRepublicIdNo(trid);
+        return ResponseEntity.ok(creditResponse);
+    }
 
 }
