@@ -1,40 +1,34 @@
 const sidebarNav = [
-    {
-        link: '/',
-        section: 'home',
-        icon: <i className='bx bx-home-alt'></i>,
-        text: 'Home'
-    },
-    {
-        link: '/orders',
-        section: 'orders',
-        icon: <i className='bx bx-receipt' ></i>,
-        text: 'Orders'
-    },
-    {
-        link: '/products',
-        section: 'products',
-        icon: <i className='bx bx-cube'></i>,
-        text: 'Products'
-    },
-    {
-        link: '/customers',
-        section: 'customers',
-        icon: <i className='bx bx-user'></i>,
-        text: 'Customers'
-    },
-    {
-        link: '/stats',
-        section: 'stats',
-        icon: <i className='bx bx-line-chart'></i>,
-        text: 'Stats'
-    },
-    {
-        link: '/settings',
-        section: 'settings',
-        icon: <i className='bx bx-cog'></i>,
-        text: 'Settings'
-    }
-]
+  {
+    link: "/",
+    section: "home",
+    icon: <i className="bx bx-home-alt"></i>,
+    text: "Anasayfa",
+  },
+  {
+    link: "/credit-inquiry",
+    section: "credit-inquiry",
+    icon: <i className="bx bx-receipt"></i>,
+    text: "Sonuç Sorgula",
+  },
+  {
+    link: "/new-customer",
+    section: "new-customer",
+    icon: <i className="bx bx-cube"></i>,
+    text: "Yeni Müşteri",
+  },
+  {
+    link: "/delete-customer",
+    section: "delete-customer",
+    icon: <i className="bx bx-user"></i>,
+    text: "Müşteri Sil",
+  },
+  {
+    link: "/apply-credit",
+    section: "apply-credit",
+    icon: <i className="bx bx-line-chart"></i>,
+    text: "Kredi Başvuru",
+  },
+];
 
-export default sidebarNav
+export default sidebarNav;

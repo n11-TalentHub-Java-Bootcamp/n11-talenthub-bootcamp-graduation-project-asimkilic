@@ -1,5 +1,19 @@
 import images from "./images";
+import axios from "axios";
+export const Axios = axios.create({
+  baseURL: "http://localhost:8080/api/v1/customers",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
+export const AxiosPost = (url, data) => Axios.post(url, data);
+export const AxiosGet = (url, data) => Axios.get(url, data);
+export const AxiosDelete = (url, data) =>
+  axios.delete(url, {
+    data: { turkishRepublicIdNo: data.turkishRepublicIdNo },
+    headers: { "Content-Type": "application/json" },
+  });
 const data = {
   user: {
     name: "Abdullah Asım KILIÇ",
@@ -7,28 +21,10 @@ const data = {
   },
   summary: [
     {
-      title: "Sales",
-      subtitle: "Total sales today",
+      title: "Title",
+      subtitle: "subtitle",
       value: "$1.000",
       percent: 70,
-    },
-    {
-      title: "Orders",
-      subtitle: "Total orders today",
-      value: "3000",
-      percent: 49,
-    },
-    {
-      title: "Revenue",
-      subtitle: "Total revenue today",
-      value: "$678",
-      percent: 38,
-    },
-    {
-      title: "Visits",
-      subtitle: "Total visits today",
-      value: "2345",
-      percent: 55,
     },
   ],
   revenueSummary: {
@@ -42,19 +38,7 @@ const data = {
   overall: [
     {
       value: "300K",
-      title: "Orders",
-    },
-    {
-      value: "9.876K",
-      title: "Customers",
-    },
-    {
-      value: "1.234K",
-      title: "Products",
-    },
-    {
-      value: "$5678",
-      title: "Revenue",
+      title: "Credits",
     },
   ],
   revenueByChannel: [

@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const Blank = () => {
-    return (
-        <div>
-            This is a blank page
-        </div>
-    )
-}
+  return <div>Aradığınız sayfa bulunamadı.</div>;
+};
 
-export default Blank
+export default Blank;

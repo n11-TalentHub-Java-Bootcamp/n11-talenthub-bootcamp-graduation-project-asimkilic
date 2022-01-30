@@ -2,10 +2,16 @@
 
 .dashboard-wrapper {
   @include flex(stretch);
+  @include tablet {
+    flex-direction: column;
+  }
 
   &__main {
     flex-grow: 1;
     padding-right: $sideBarWidth;
+    @include tablet {
+      padding-right: 0;
+    }
   }
   &__right {
     width: $sideBarWidth;
@@ -17,5 +23,14 @@
     position: fixed;
     top: 0;
     right: 0;
+
+    @include tablet {
+      position: relative;
+      padding: $mobileSpacing;
+      margin-top: $mobileSpacing;
+      border-radius: $borderRadius;
+      width: 100%;
+      height: max-content;
+    }
   }
 }
