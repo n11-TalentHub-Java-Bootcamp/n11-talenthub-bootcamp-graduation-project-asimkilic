@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import NavBar from "./NagivationBar/NavBar";
 import CustomerResultInquiry from "./Customer/CustomerResultInquiry";
 import styled from "styled-components";
 import Clouds from "./Clouds/Clouds";
+import AllCustomers from "./Customer/AllCustomers";
+import { useParams, useSearchParams } from "react-router-dom";
 
 const LoanApplication = () => {
+  const [pageId, setPageId] = useState(0);
+
+  const { code } = useParams();
+  const [veri, setVeri] = useState([]);
+  React.useEffect(() => {
+    setPageId(code);
+    console.log(code);
+  }, []);
+
   const Pages = [
     {
       id: 0,
@@ -27,6 +38,22 @@ const LoanApplication = () => {
         },
       ],
     },
+    {
+      id: 1,
+      path: "/allcustomers",
+      components: [
+        {
+          id: 0,
+          name: "Navigation Bar",
+          component: <NavBar />,
+        },
+        {
+          id: 1,
+          name: "All customers",
+          component: <AllCustomers />,
+        },
+      ],
+    },
   ];
   return (
     <PageRenderer
@@ -35,7 +62,7 @@ const LoanApplication = () => {
         zIndex: 0,
       }}
     >
-      {Pages[0].components.map((component_) => {
+      {Pages[pageId === undefined ? 0 : pageId].components.map((component_) => {
         return component_.component;
       })}
     </PageRenderer>

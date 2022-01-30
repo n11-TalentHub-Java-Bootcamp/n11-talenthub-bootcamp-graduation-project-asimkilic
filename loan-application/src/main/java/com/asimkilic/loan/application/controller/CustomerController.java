@@ -73,5 +73,6 @@ public class CustomerController {
         BaseCreditResponse response = customerService.findCreditResult(creditResultRequestDto);
         return ResponseEntity.ok(response);
     }
+    //TODO apply credit by tckn
 
 }
